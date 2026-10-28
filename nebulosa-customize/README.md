@@ -1,19 +1,6 @@
-# React + Vite
+# Nebulosa Costumize
+## Projeto de E-commerce para itens personalizados
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+O Nebulosa Costumize é um projeto de criação de um e-commerce para personalização de itens. O projeto foi inicializado e projetado para trazer criatividade, cores, universos e formas diversas para todos os tipos e gostos. 
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Idealizado e desenvolvido pelas alunas Lavinia Antunes Silva e Manuella Oleoin do Prado para a matéria de Linguagem de Programação, disciplina que compõe a grade curricular do 2º ano do Técnico em Informática Integrado ao Ensino Médio, curso do IFSP Caraguatatuba.  
