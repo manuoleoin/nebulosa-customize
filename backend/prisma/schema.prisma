@@ -1,0 +1,90 @@
+// Espelha db/nebulosabd.sql (MySQL). Nomes de tabelas e colunas mapeados com @@map/@map.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement()) @db.UnsignedInt
+  nome      String   @db.VarChar(100)
+  email     String   @unique(map: "email_UNIQUE") @db.VarChar(255)
+  senha     String   @db.Char(80)
+  telefone  String   @db.VarChar(20)
+  tipo      String   @db.VarChar(50)
+
+  pedidos    Pedido[]
+  avaliacoes Avaliacao[]
+
+  @@map("usuario")
+}
+
+model Produto {
+  id            Int       @id @default(autoincrement()) @db.UnsignedInt
+  nome          String    @db.VarChar(255)
+  preco         Decimal   @db.Decimal(10, 2)
+  precoDesconto Decimal   @db.Decimal(10, 2)
+  emDestaque    DateTime? @db.Timestamp(0)
+  descricao     String?   @db.Text
+  cor           String?   @db.VarChar(45)
+  tamanho       String?   @db.VarChar(45)
+  fotoCapa      String?   @db.VarChar(255)
+  categoria     String?   @db.VarChar(100)
+
+  itens      ItemPedido[]
+  avaliacoes Avaliacao[]
+
+  @@map("produto")
+}
+
+model Pedido {
+  id              Int       @id @default(autoincrement()) @db.UnsignedInt
+  usuarioId       Int       @map("usuario_id") @db.UnsignedInt
+  endereco        String?   @db.VarChar(255)
+  metodoPagamento String?   @db.VarChar(100)
+  frete           Decimal?  @db.Decimal(10, 2)
+  total           Decimal   @db.Decimal(10, 2)
+  status          String    @db.VarChar(50)
+  data            DateTime  @default(now()) @db.Timestamp(0)
+  dataEntrega     DateTime? @db.Timestamp(0)
+
+  usuario Usuario      @relation(fields: [usuarioId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pedido_usuario")
+  itens   ItemPedido[]
+
+  @@index([usuarioId], map: "fk_pedido_usuario_idx")
+  @@map("pedido")
+}
+
+model ItemPedido {
+  pedidoId   Int     @map("pedido_id") @db.UnsignedInt
+  produtoId  Int     @map("produto_id") @db.UnsignedInt
+  quantidade Int
+  preco      Decimal @db.Decimal(10, 2)
+
+  pedido  Pedido  @relation(fields: [pedidoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pedido_has_produto_pedido1")
+  produto Produto @relation(fields: [produtoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pedido_has_produto_produto1")
+
+  @@id([pedidoId, produtoId])
+  @@index([produtoId], map: "fk_pedido_has_produto_produto1_idx")
+  @@index([pedidoId], map: "fk_pedido_has_produto_pedido1_idx")
+  @@map("item_pedido")
+}
+
+model Avaliacao {
+  usuarioId Int      @map("usuario_id") @db.UnsignedInt
+  produtoId Int      @map("produto_id") @db.UnsignedInt
+  data      DateTime @default(now()) @db.Timestamp(0)
+  nota      Decimal  @db.Decimal(3, 2)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_has_produto_usuario1")
+  produto Produto @relation(fields: [produtoId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_has_produto_produto1")
+
+  @@id([usuarioId, produtoId])
+  @@index([produtoId], map: "fk_usuario_has_produto_produto1_idx")
+  @@index([usuarioId], map: "fk_usuario_has_produto_usuario1_idx")
+  @@map("usuario_avalia_produto")
+}

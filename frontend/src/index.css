@@ -1,1 +1,117 @@
 @import "tailwindcss";
+
+/* =========================================================
+   Tema Nebulosa (paleta "Émú") — Tailwind v4: tokens viram utilitários
+   ex.: bg-creme, text-roxo-escuro, font-titulo, shadow-card
+   ========================================================= */
+@theme {
+  --color-creme: #fff9e9;
+  --color-creme-2: #fdf3da;
+  --color-amarelo: #ffd86b;
+  --color-amarelo-2: #f6cf6b;
+  --color-amarelo-escuro: #e8b53c;
+  --color-roxo: #7b5dc9;
+  --color-roxo-hover: #6747b8;
+  --color-roxo-escuro: #3a246b;
+  --color-lilas: #e7d8ff;
+  --color-lilas-2: #f3ecff;
+  --color-noite: #261a4c;
+  --color-quase-preto: #1e1033;
+  --color-texto-suave: #6b5a8e;
+  --color-borda: #d9cbef;
+  --color-perigo: #c0392b;
+  --color-sucesso: #2e8b57;
+  --color-foto: #efe3d3;
+
+  --font-sans: "DM Sans", "Segoe UI", Arial, sans-serif;
+  --font-titulo: "Alegreya", Georgia, serif;
+  --font-rotulo: "Josefin Sans", "Trebuchet MS", sans-serif;
+  --font-logo: "Sacramento", cursive;
+  --font-preco: Arial, Helvetica, sans-serif;
+
+  --shadow-card: 0 10px 24px rgb(58 36 107 / 0.14);
+  --shadow-forte: 0 18px 40px rgb(30 16 51 / 0.28);
+
+  --animate-entrar: entrar 0.25s ease-out;
+  @keyframes entrar {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-creme font-sans text-roxo-escuro antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-titulo leading-tight font-bold text-roxo-escuro;
+  }
+  [id] {
+    scroll-margin-top: 100px;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-amarelo);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition: none !important;
+      animation: none !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Classes reutilizáveis (poucas, para não repetir dezenas de utilitários) */
+@layer components {
+  .container-site {
+    @apply mx-auto w-[min(1180px,100%-40px)];
+  }
+  .rotulo {
+    @apply font-rotulo text-sm font-semibold tracking-[0.2em] text-roxo uppercase;
+  }
+
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-transparent px-6 py-2.5 leading-tight font-semibold no-underline transition active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn svg {
+    @apply size-[1.1em] shrink-0;
+  }
+  .btn-primario {
+    @apply bg-roxo text-white hover:bg-roxo-hover;
+  }
+  .btn-secundario {
+    @apply bg-amarelo text-roxo-escuro hover:bg-amarelo-escuro;
+  }
+  .btn-contorno {
+    @apply border-roxo bg-transparent text-roxo hover:bg-lilas-2;
+  }
+  .btn-perigo {
+    @apply border-perigo bg-transparent text-perigo hover:bg-perigo hover:text-white;
+  }
+  .btn-perigo-cheio {
+    @apply bg-perigo text-white hover:bg-[#a93224];
+  }
+  .btn-grande {
+    @apply px-8 py-3 text-xl;
+  }
+
+  .input {
+    @apply w-full rounded-xl border-[1.5px] border-borda bg-white px-3 py-2.5 text-roxo-escuro outline-none transition focus:border-roxo focus:ring-3 focus:ring-roxo/20 aria-invalid:border-perigo;
+  }
+  .painel {
+    @apply rounded-[18px] bg-white p-7 shadow-card;
+  }
+  .link {
+    @apply font-medium text-roxo underline-offset-2 hover:text-roxo-hover hover:underline;
+  }
+}
