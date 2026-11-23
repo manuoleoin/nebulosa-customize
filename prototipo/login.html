@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — Nebulosa Costumize</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700&family=DM+Sans:wght@400;500;600;700&family=Josefin+Sans:wght@400;600;700&family=Sacramento&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-pagina="login">
+  <main class="auth-wrap">
+    <section class="auth-arte" aria-hidden="true">
+      <svg class="deco" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+        <g fill="#FFD86B"><path transform="translate(320 70) scale(1.6)" d="M0-10 2.2-2.2 10 0 2.2 2.2 0 10-2.2 2.2-10 0-2.2-2.2z"/><path transform="translate(60 340) scale(1)" d="M0-10 2.2-2.2 10 0 2.2 2.2 0 10-2.2 2.2-10 0-2.2-2.2z"/></g>
+        <g fill="#E7D8FF" opacity=".7"><circle cx="40" cy="60" r="1.5"/><circle cx="120" cy="30" r="1"/><circle cx="260" cy="140" r="1.5"/><circle cx="370" cy="220" r="1"/><circle cx="200" cy="380" r="1.5"/><circle cx="330" cy="330" r="1"/></g>
+        <path d="M240 400c40-60 120-80 170-80" fill="none" stroke="#7B5DC9" stroke-width="2"/>
+      </svg>
+      <h2>Que bom ter você de volta à sua galáxia.</h2>
+      <p>Entre para acompanhar seus pedidos, avaliar produtos e finalizar suas compras com mais rapidez.</p>
+    </section>
+
+    <section class="auth-form-area">
+      <form class="cartao-form" id="form-login" novalidate>
+        <h1>Acesse sua conta</h1>
+        <p class="sub">Que bom te ver por aqui ✨</p>
+        <div class="alerta alerta-info" id="aviso-volta" hidden>Faça login para continuar.</div>
+        <div class="alerta alerta-erro" id="erro-login" role="alert" hidden></div>
+
+        <div class="campo">
+          <label for="email">E-mail</label>
+          <div class="input-wrap"><span data-icone="email"></span><input id="email" name="email" type="email" autocomplete="email" placeholder="seuemail@exemplo.com" required></div>
+          <span class="erro">Informe um e-mail válido.</span>
+        </div>
+        <div class="campo">
+          <label for="senha">Senha</label>
+          <div class="input-wrap"><span data-icone="cadeado"></span><input id="senha" name="senha" type="password" autocomplete="current-password" placeholder="Sua senha" required>
+            <button type="button" class="btn-olho" data-olho="senha" aria-label="Mostrar senha" aria-pressed="false"></button></div>
+          <span class="erro">Informe sua senha.</span>
+        </div>
+        <p style="text-align:right;margin:-6px 0 16px;font-size:.88rem"><a href="#" onclick="toast('Enviaremos um link de redefinição para seu e-mail.');return false">Esqueci minha senha</a></p>
+
+        <button class="btn btn-primario btn-bloco" type="submit">Entrar</button>
+        <p class="form-rodape">Não tem uma conta? <a href="cadastro.html" id="link-cadastro"><strong>Cadastre-se</strong></a></p>
+        <p class="form-rodape" style="font-size:.78rem">Protótipo: qualquer e-mail e senha entram como cliente.</p>
+      </form>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // destino seguro após login (somente páginas locais .html)
+    function destinoVolta() {
+      const v = new URLSearchParams(location.search).get("volta");
+      return v && /^[a-z-]+\.html(\?[\w=&%.-]*)?$/i.test(v) ? v : null;
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      qsa("[data-icone]").forEach((el) => (el.outerHTML = ICONES[el.dataset.icone]));
+      qsa("[data-olho]").forEach((b) => {
+        b.innerHTML = ICONES.olho;
+        b.addEventListener("click", () => {
+          const i = qs("#" + b.dataset.olho);
+          const mostrar = i.type === "password";
+          i.type = mostrar ? "text" : "password";
+          b.setAttribute("aria-pressed", mostrar);
+          b.setAttribute("aria-label", mostrar ? "Ocultar senha" : "Mostrar senha");
+        });
+      });
+
+      const volta = destinoVolta();
+      if (volta) {
+        qs("#aviso-volta").hidden = false;
+        if (volta.startsWith("pedido")) qs("#aviso-volta").textContent = "Faça login para finalizar seu pedido. Seu carrinho está salvo!";
+        qs("#link-cadastro").href = `cadastro.html?volta=${encodeURIComponent(volta)}`;
+      }
+      if (Auth.logado()) location.replace(volta || "perfil.html");
+
+      qs("#form-login").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const email = qs("#email"), senha = qs("#senha");
+        const okEmail = email.checkValidity() && email.value.trim();
+        const okSenha = senha.value.length > 0;
+        email.closest(".campo").classList.toggle("invalido", !okEmail);
+        senha.closest(".campo").classList.toggle("invalido", !okSenha);
+        if (!okEmail || !okSenha) return (okEmail ? senha : email).focus();
+
+        // simulação: procura conta criada no cadastro; senão, usa a cliente de exemplo
+        const contas = store.get("nebulosa:contas", []);
+        const conta = contas.find((c) => c.email.toLowerCase() === email.value.trim().toLowerCase());
+        const base = USUARIOS[0];
+        Auth.entrar(conta || {
+          id: base.id,
+          nome: base.nome,
+          email: email.value.trim(),
+          telefone: base.telefone,
+          tipo: "cliente"
+        });
+        sessionStorage.setItem("nebulosa:toast", `Olá, ${Auth.usuario().nome.split(" ")[0]}! Você entrou na sua conta.`);
+        location.href = volta || "index.html";
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nebulosa Costumize — Produtos personalizados</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700&family=DM+Sans:wght@400;500;600;700&family=Josefin+Sans:wght@400;600;700&family=Sacramento&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-pagina="inicio">
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-card">
+          <div class="hero-texto">
+            <h1>Realce sua <em>melhor versão</em> e tenha produtos únicos</h1>
+            <p class="hero-slogan"><span>Personalize</span><span aria-hidden="true">-</span><span>Crie</span><span aria-hidden="true">-</span><span>Surpreenda</span></p>
+            <a class="btn btn-primario btn-grande" href="produtos.html">Conheça nossos produtos <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="hero-arte"><img src="img/hero.svg" alt="Moletom off-white com estampa de planeta nas mangas e caneca com constelações" style="width:100%;height:100%;object-fit:cover"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Produtos em destaque (produto.emDestaque IS NOT NULL) -->
+    <section class="secao secao-escura" aria-labelledby="titulo-destaque">
+      <div class="container">
+        <div class="secao-cabecalho">
+          <h2 id="titulo-destaque">Produtos em destaque</h2>
+          <a class="link-seta" href="produtos.html">Ver todos <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="grid-produtos" id="grid-destaque"></div>
+      </div>
+    </section>
+
+    <!-- Sustentabilidade -->
+    <section class="secao secao-amarela" aria-labelledby="titulo-sust">
+      <div class="container">
+        <h2 id="titulo-sust">Compromisso com o meio ambiente e sustentabilidade</h2>
+        <div class="grid-2">
+          <article class="painel-amarelo">
+            <h3>Materiais utilizados</h3>
+            <ul>
+              <li><span data-icone="folha"></span><span><strong>Algodão certificado</strong><br>Camisetas, moletons e ecobags com algodão de origem rastreável e tingimento de baixo impacto.</span></li>
+              <li><span data-icone="folha"></span><span><strong>Tintas à base d'água</strong><br>Estampas em silk e sublimação sem solventes tóxicos, seguras para você e para o planeta.</span></li>
+              <li><span data-icone="folha"></span><span><strong>Embalagens recicláveis</strong><br>Papel kraft, fita de papel e zero plástico bolha: tudo pode voltar para a reciclagem.</span></li>
+            </ul>
+          </article>
+          <article class="painel-amarelo">
+            <h3>Fabricação</h3>
+            <ul>
+              <li><span data-icone="caixa"></span><span><strong>Produção sob demanda</strong><br>Só produzimos depois do seu pedido. Nada de estoque parado nem desperdício.</span></li>
+              <li><span data-icone="pessoa"></span><span><strong>Ateliê local</strong><br>Cada peça é finalizada à mão pela nossa equipe, com conferência de qualidade.</span></li>
+              <li><span data-icone="caminhao"></span><span><strong>Entrega compensada</strong><br>Compensamos a emissão de carbono de todos os envios para qualquer lugar do Brasil.</span></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="secao faq" id="faq" aria-labelledby="titulo-faq">
+      <div class="container">
+        <h2 id="titulo-faq">Dúvidas Frequentes</h2>
+        <ol class="faq-lista">
+          <li><details class="faq-item"><summary>O material utilizado na produção é sustentável?</summary><p>Sim! Trabalhamos com algodão certificado, tintas à base d'água e embalagens 100% recicláveis. Veja mais na seção de sustentabilidade acima.</p></details></li>
+          <li><details class="faq-item"><summary>Vocês entregam em todo o Brasil? E para o exterior?</summary><p>Entregamos em todo o Brasil pelos Correios e transportadoras parceiras. Envios internacionais ainda não estão disponíveis, mas estão nos nossos planos.</p></details></li>
+          <li><details class="faq-item"><summary>Possuem loja física? Se sim, qual o endereço?</summary><p>Somos uma loja 100% online, mas você pode retirar seu pedido no nosso ateliê em São Paulo/SP mediante agendamento.</p></details></li>
+          <li><details class="faq-item"><summary>A personalização é em todos os itens da loja?</summary><p>Quase todos! Itens marcados como "personalizado" aceitam nome, frase ou arte. Após finalizar o pedido, nossa equipe entra em contato para alinhar os detalhes.</p></details></li>
+        </ol>
+        <p class="faq-contato">Não encontrou sua dúvida? <a href="mailto:atendimento@nebulosacostumize.com.br">Entre em contato!</a></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const destaques = PRODUTOS.filter((p) => p.emDestaque)
+        .sort((a, b) => new Date(b.emDestaque) - new Date(a.emDestaque)) // mais recentes primeiro
+        .slice(0, 4);
+      qs("#grid-destaque").innerHTML = destaques.map(cardProduto).join("");
+      qsa("[data-icone]").forEach((el) => (el.outerHTML = ICONES[el.dataset.icone]));
+    });
+  </script>
+</body>
+</html>

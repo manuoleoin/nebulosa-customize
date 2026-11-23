@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produtos — Nebulosa Costumize</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700&family=DM+Sans:wght@400;500;600;700&family=Josefin+Sans:wght@400;600;700&family=Sacramento&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-pagina="produtos">
+  <main>
+    <div class="container">
+      <h1 class="sr-only" id="titulo-pagina">Nossos produtos</h1>
+      <form class="barra-busca" id="busca" role="search" onsubmit="return false">
+        <span data-icone="busca"></span>
+        <label for="campo-busca" class="sr-only">Pesquisar produtos</label>
+        <input id="campo-busca" type="search" placeholder="Digite para pesquisar..." autocomplete="off">
+        <button type="button" id="limpar-busca" aria-label="Limpar pesquisa">×</button>
+      </form>
+
+      <div class="filtros" role="group" aria-label="Filtrar por categoria" id="filtros"></div>
+      <p class="resultado-info" id="resultado-info" aria-live="polite"></p>
+    </div>
+
+    <section class="container" style="padding-bottom:40px" aria-labelledby="titulo-pagina">
+      <div class="grid-produtos" id="grid-a"></div>
+    </section>
+
+    <!-- faixa escura: destaques (aparece somente sem filtros, como no layout) -->
+    <section class="secao secao-escura" id="faixa-destaque" aria-labelledby="titulo-faixa">
+      <div class="container">
+        <div class="secao-cabecalho"><h2 id="titulo-faixa">Em destaque</h2></div>
+        <div class="grid-produtos" id="grid-destaque"></div>
+      </div>
+    </section>
+
+    <section class="container" style="padding:40px 0 56px" id="secao-b">
+      <div class="grid-produtos" id="grid-b"></div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      qsa("[data-icone]").forEach((el) => (el.outerHTML = ICONES[el.dataset.icone]));
+
+      const params = new URLSearchParams(location.search);
+      const estado = {
+        termo: params.get("q") || "",
+        categoria: params.get("categoria") || "Todos",
+        ordem: "relevancia"
+      };
+
+      // chips de categoria + ordenação
+      const categorias = ["Todos", ...new Set(PRODUTOS.map((p) => p.categoria))];
+      qs("#filtros").innerHTML = categorias.map((c) =>
+        `<button type="button" class="chip" data-cat="${c}" aria-pressed="${c === estado.categoria}">${c}</button>`).join("") +
+        `<label class="sr-only" for="ordem">Ordenar por</label>
+         <select class="select" id="ordem">
+           <option value="relevancia">Mais relevantes</option>
+           <option value="novos">Mais recentes</option>
+           <option value="menor">Menor preço</option>
+           <option value="maior">Maior preço</option>
+           <option value="nota">Melhor avaliados</option>
+         </select>`;
+      qs("#ordem").value = estado.ordem;
+
+      const campo = qs("#campo-busca");
+      campo.value = estado.termo;
+
+      const normalizar = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+
+      function render() {
+        let lista = PRODUTOS.filter((p) =>
+          (estado.categoria === "Todos" || p.categoria === estado.categoria) &&
+          (!estado.termo || normalizar(`${p.nome} ${p.categoria} ${p.descricao}`).includes(normalizar(estado.termo))));
+
+        const ord = {
+          relevancia: (a, b) => (b.emDestaque ? 1 : 0) - (a.emDestaque ? 1 : 0),
+          novos: (a, b) => b.id - a.id,
+          menor: (a, b) => a.precoDesconto - b.precoDesconto,
+          maior: (a, b) => b.precoDesconto - a.precoDesconto,
+          nota: (a, b) => (notaMedia(b.id) || 0) - (notaMedia(a.id) || 0)
+        };
+        lista = [...lista].sort(ord[estado.ordem]);
+
+        const semFiltro = !estado.termo && estado.categoria === "Todos";
+        const corte = semFiltro ? 8 : lista.length;
+        qs("#grid-a").innerHTML = lista.slice(0, corte).map(cardProduto).join("") ||
+          `<div class="vazio" style="grid-column:1/-1">${ICONES.busca}<p><strong>Nenhum produto encontrado.</strong><br>Tente outro termo ou categoria.</p></div>`;
+        qs("#grid-b").innerHTML = lista.slice(corte).map(cardProduto).join("");
+        qs("#secao-b").hidden = !semFiltro || lista.length <= corte;
+
+        qs("#faixa-destaque").hidden = !semFiltro;
+        qs("#grid-destaque").innerHTML = PRODUTOS.filter((p) => p.emDestaque).slice(0, 4).map(cardProduto).join("");
+
+        qs("#resultado-info").textContent = semFiltro ? "" :
+          `${lista.length} ${lista.length === 1 ? "produto encontrado" : "produtos encontrados"}`;
+
+        // reflete o estado na URL (compartilhável)
+        const u = new URLSearchParams();
+        if (estado.termo) u.set("q", estado.termo);
+        if (estado.categoria !== "Todos") u.set("categoria", estado.categoria);
+        history.replaceState(null, "", location.pathname + (u.toString() ? `?${u}` : ""));
+      }
+
+      campo.addEventListener("input", () => { estado.termo = campo.value.trim(); render(); });
+      qs("#limpar-busca").addEventListener("click", () => { campo.value = ""; estado.termo = ""; render(); campo.focus(); });
+      qs("#ordem").addEventListener("change", (e) => { estado.ordem = e.target.value; render(); });
+      qs("#filtros").addEventListener("click", (e) => {
+        const b = e.target.closest("[data-cat]");
+        if (!b) return;
+        estado.categoria = b.dataset.cat;
+        qsa("[data-cat]").forEach((c) => c.setAttribute("aria-pressed", c === b));
+        render();
+      });
+      render();
+    });
+  </script>
+</body>
+</html>

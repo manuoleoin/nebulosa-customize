@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar conta — Nebulosa Costumize</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700&family=DM+Sans:wght@400;500;600;700&family=Josefin+Sans:wght@400;600;700&family=Sacramento&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-pagina="cadastro">
+  <main class="auth-wrap">
+    <section class="auth-arte" aria-hidden="true">
+      <svg class="deco" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+        <g fill="#FFD86B"><path transform="translate(330 90) scale(1.8)" d="M0-10 2.2-2.2 10 0 2.2 2.2 0 10-2.2 2.2-10 0-2.2-2.2z"/><path transform="translate(70 320) scale(1.1)" d="M0-10 2.2-2.2 10 0 2.2 2.2 0 10-2.2 2.2-10 0-2.2-2.2z"/></g>
+        <g fill="#E7D8FF" opacity=".7"><circle cx="50" cy="40" r="1.5"/><circle cx="150" cy="70" r="1"/><circle cx="280" cy="180" r="1.5"/><circle cx="360" cy="250" r="1"/><circle cx="180" cy="360" r="1.5"/></g>
+        <ellipse cx="330" cy="330" rx="90" ry="22" transform="rotate(-18 330 330)" fill="none" stroke="#7B5DC9" stroke-width="3"/>
+        <circle cx="330" cy="330" r="38" fill="#7B5DC9"/>
+      </svg>
+      <h2>Crie sua conta e personalize o universo.</h2>
+      <p>Com uma conta você acompanha seus pedidos, salva seus dados de entrega e avalia os produtos que comprou.</p>
+    </section>
+
+    <section class="auth-form-area">
+      <form class="cartao-form" id="form-cadastro" novalidate>
+        <h1>Criar conta</h1>
+        <p class="sub">Leva menos de um minuto 🚀</p>
+
+        <div class="campo">
+          <label for="nome">Nome completo</label>
+          <div class="input-wrap"><span data-icone="pessoa"></span><input id="nome" name="nome" autocomplete="name" maxlength="100" placeholder="Como está no seu documento" required minlength="3"></div>
+          <span class="erro">Informe seu nome completo (nome e sobrenome).</span>
+        </div>
+        <div class="campo">
+          <label for="email">E-mail</label>
+          <div class="input-wrap"><span data-icone="email"></span><input id="email" name="email" type="email" autocomplete="email" maxlength="255" placeholder="seuemail@exemplo.com" required></div>
+          <span class="erro" id="erro-email">Informe um e-mail válido.</span>
+        </div>
+        <div class="campo">
+          <label for="telefone">Telefone / WhatsApp</label>
+          <div class="input-wrap"><span data-icone="telefone"></span><input id="telefone" name="telefone" type="tel" autocomplete="tel" inputmode="numeric" placeholder="(11) 98765-4321" required></div>
+          <span class="erro">Informe um telefone com DDD.</span>
+        </div>
+        <div class="campo">
+          <label for="senha">Senha</label>
+          <div class="input-wrap"><span data-icone="cadeado"></span><input id="senha" name="senha" type="password" autocomplete="new-password" minlength="8" required aria-describedby="ajuda-senha">
+            <button type="button" class="btn-olho" data-olho="senha" aria-label="Mostrar senha" aria-pressed="false"></button></div>
+          <span class="ajuda" id="ajuda-senha">Mínimo de 8 caracteres, com letras e números.</span>
+          <span class="erro">A senha precisa ter 8+ caracteres, com letras e números.</span>
+        </div>
+        <div class="campo">
+          <label for="confirma">Confirmar senha</label>
+          <div class="input-wrap"><span data-icone="cadeado"></span><input id="confirma" name="confirma" type="password" autocomplete="new-password" required>
+            <button type="button" class="btn-olho" data-olho="confirma" aria-label="Mostrar senha" aria-pressed="false"></button></div>
+          <span class="erro">As senhas não conferem.</span>
+        </div>
+        <label class="check"><input type="checkbox" id="termos" required> <span>Li e aceito os <a href="#">termos de uso</a> e a <a href="#">política de privacidade</a>.</span></label>
+        <div class="alerta alerta-erro" id="erro-termos" role="alert" hidden>Você precisa aceitar os termos para continuar.</div>
+
+        <button class="btn btn-primario btn-bloco" type="submit">Criar minha conta</button>
+        <p class="form-rodape">Já tem conta? <a href="login.html" id="link-login"><strong>Entrar</strong></a></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function mascaraTelefone(v) {
+      const d = v.replace(/\D/g, "").slice(0, 11);
+      if (d.length <= 2) return d.length ? `(${d}` : "";
+      if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+      if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+      return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      qsa("[data-icone]").forEach((el) => (el.outerHTML = ICONES[el.dataset.icone]));
+      qsa("[data-olho]").forEach((b) => {
+        b.innerHTML = ICONES.olho;
+        b.addEventListener("click", () => {
+          const i = qs("#" + b.dataset.olho);
+          const mostrar = i.type === "password";
+          i.type = mostrar ? "text" : "password";
+          b.setAttribute("aria-pressed", mostrar);
+          b.setAttribute("aria-label", mostrar ? "Ocultar senha" : "Mostrar senha");
+        });
+      });
+
+      const v = new URLSearchParams(location.search).get("volta");
+      const volta = v && /^[a-z-]+\.html(\?[\w=&%.-]*)?$/i.test(v) ? v : null;
+      if (volta) qs("#link-login").href = `login.html?volta=${encodeURIComponent(volta)}`;
+
+      const tel = qs("#telefone");
+      tel.addEventListener("input", () => (tel.value = mascaraTelefone(tel.value)));
+
+      const regras = {
+        nome: (x) => x.trim().split(/\s+/).length >= 2 && x.trim().length >= 3,
+        email: (x, el) => el.checkValidity() && x.trim().length > 0,
+        telefone: (x) => x.replace(/\D/g, "").length >= 10,
+        senha: (x) => x.length >= 8 && /[a-z]/i.test(x) && /\d/.test(x),
+        confirma: (x) => x.length > 0 && x === qs("#senha").value
+      };
+      const validar = (id) => {
+        const el = qs("#" + id);
+        const ok = regras[id](el.value, el);
+        el.closest(".campo").classList.toggle("invalido", !ok);
+        el.setAttribute("aria-invalid", !ok);
+        return ok;
+      };
+      Object.keys(regras).forEach((id) => qs("#" + id).addEventListener("blur", () => qs("#" + id).value && validar(id)));
+
+      qs("#form-cadastro").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const invalidos = Object.keys(regras).filter((id) => !validar(id));
+        const termos = qs("#termos").checked;
+        qs("#erro-termos").hidden = termos;
+        if (invalidos.length) return qs("#" + invalidos[0]).focus();
+        if (!termos) return qs("#termos").focus();
+
+        const contas = store.get("nebulosa:contas", []);
+        const email = qs("#email").value.trim();
+        if (contas.some((c) => c.email.toLowerCase() === email.toLowerCase())) {
+          qs("#erro-email").textContent = "Este e-mail já está cadastrado. Que tal entrar?";
+          qs("#email").closest(".campo").classList.add("invalido");
+          return qs("#email").focus();
+        }
+        const nova = { id: 100 + contas.length, nome: qs("#nome").value.trim(), email, telefone: tel.value, tipo: "cliente" };
+        contas.push(nova);
+        store.set("nebulosa:contas", contas);
+        Auth.entrar(nova);
+        sessionStorage.setItem("nebulosa:toast", `Conta criada! Bem-vindo(a), ${nova.nome.split(" ")[0]} ✨`);
+        location.href = volta || "perfil.html";
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finalizar pedido — Nebulosa Costumize</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700&family=DM+Sans:wght@400;500;600;700&family=Josefin+Sans:wght@400;600;700&family=Sacramento&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>Auth.exigir();</script>
+</head>
+<body data-pagina="pedido">
+  <main class="container">
+    <ol class="passos" aria-label="Etapas da compra">
+      <li><b>1</b> Carrinho</li>
+      <li class="atual" aria-current="step"><b>2</b> Entrega e pagamento</li>
+      <li><b>3</b> Confirmação</li>
+    </ol>
+
+    <div id="area-checkout"></div>
+  </main>
+
+  <template id="tpl-checkout">
+    <form class="checkout-grid" id="form-pedido" novalidate>
+      <div>
+        <!-- Endereço -> pedido.endereco -->
+        <section class="painel" aria-labelledby="t-endereco">
+          <div class="painel-cab"><h2 id="t-endereco">Endereço de entrega</h2></div>
+          <div class="campo"><label for="destinatario">Destinatário</label><input id="destinatario" autocomplete="name" required><span class="erro">Informe quem vai receber.</span></div>
+          <div class="form-linha l-cep">
+            <div class="campo"><label for="cep">CEP</label><input id="cep" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" required><span class="erro">CEP inválido.</span></div>
+            <div class="campo"><label for="rua">Rua / Avenida</label><input id="rua" autocomplete="address-line1" required><span class="erro">Informe a rua.</span></div>
+          </div>
+          <div class="form-linha l-3">
+            <div class="campo"><label for="numero">Número</label><input id="numero" required><span class="erro">Informe o número (ou "s/n").</span></div>
+            <div class="campo"><label for="complemento">Complemento <small style="font-weight:400">(opcional)</small></label><input id="complemento" autocomplete="address-line2" placeholder="Apto, bloco, referência"></div>
+            <div class="campo"><label for="uf">UF</label>
+              <select id="uf" required>
+                <option value="">--</option>
+                <option>AC</option><option>AL</option><option>AP</option><option>AM</option><option>BA</option><option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option><option>MT</option><option>MS</option><option>MG</option><option>PA</option><option>PB</option><option>PR</option><option>PE</option><option>PI</option><option>RJ</option><option>RN</option><option>RS</option><option>RO</option><option>RR</option><option>SC</option><option selected>SP</option><option>SE</option><option>TO</option>
+              </select><span class="erro">Selecione.</span></div>
+          </div>
+          <div class="form-linha">
+            <div class="campo"><label for="bairro">Bairro</label><input id="bairro" required><span class="erro">Informe o bairro.</span></div>
+            <div class="campo"><label for="cidade">Cidade</label><input id="cidade" autocomplete="address-level2" required><span class="erro">Informe a cidade.</span></div>
+          </div>
+        </section>
+
+        <!-- Pagamento -> pedido.metodoPagamento -->
+        <section class="painel" aria-labelledby="t-pagamento">
+          <div class="painel-cab"><h2 id="t-pagamento">Forma de pagamento</h2></div>
+          <fieldset style="border:0;padding:0;margin:0">
+            <legend class="sr-only">Escolha a forma de pagamento</legend>
+            <div class="opcoes-pagamento">
+              <div class="opcao"><input type="radio" name="pagamento" id="pg-pix" value="Pix" checked><label for="pg-pix"><span data-icone="pix"></span>Pix<small>Aprovação imediata</small></label></div>
+              <div class="opcao"><input type="radio" name="pagamento" id="pg-cartao" value="Cartão de crédito"><label for="pg-cartao"><span data-icone="cartao"></span>Cartão de crédito<small>Até 3x sem juros</small></label></div>
+              <div class="opcao"><input type="radio" name="pagamento" id="pg-boleto" value="Boleto"><label for="pg-boleto"><span data-icone="boleto"></span>Boleto<small>Compensa em até 3 dias</small></label></div>
+            </div>
+          </fieldset>
+
+          <div class="pagamento-detalhe" data-pg="Pix">
+            <div class="pix-box">
+              <svg class="qr" viewBox="0 0 29 29" aria-hidden="true" shape-rendering="crispEdges"><g fill="#1E1033" id="qr"></g></svg>
+              <p style="margin:0">O QR Code e o código <strong>Pix copia e cola</strong> serão exibidos após a confirmação do pedido. O pagamento expira em 30 minutos.</p>
+            </div>
+          </div>
+          <div class="pagamento-detalhe" data-pg="Cartão de crédito" hidden>
+            <div class="alerta alerta-info">Protótipo: no sistema real os dados do cartão serão capturados pelo gateway de pagamento (não são salvos no banco).</div>
+            <div class="campo"><label for="parcelas">Parcelas</label><select id="parcelas"></select></div>
+          </div>
+          <div class="pagamento-detalhe" data-pg="Boleto" hidden>
+            <p style="margin:0">O boleto será gerado após a confirmação e também enviado para o seu e-mail. A produção começa após a compensação.</p>
+          </div>
+        </section>
+      </div>
+
+      <!-- Resumo -->
+      <aside class="painel resumo-pedido" aria-labelledby="t-resumo">
+        <div class="painel-cab"><h2 id="t-resumo">Resumo</h2><button type="button" class="btn-remover" id="editar-carrinho">Editar carrinho</button></div>
+        <ul class="resumo-itens" id="resumo-itens"></ul>
+        <div class="resumo-linhas" id="resumo-linhas"></div>
+        <div class="alerta alerta-erro" id="erro-form" role="alert" hidden>Revise os campos destacados.</div>
+        <button class="btn btn-secundario btn-bloco btn-grande" type="submit">Confirmar pedido</button>
+        <p class="nota-seg" style="text-align:center;font-size:.8rem;color:var(--texto-suave);margin:10px 0 0">Ao confirmar, você concorda com nossos <a href="#">termos de compra</a>.</p>
+      </aside>
+    </form>
+  </template>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (!Auth.logado()) return;
+      const area = qs("#area-checkout");
+
+      function telaVazia() {
+        area.innerHTML = `<div class="vazio">${ICONES.carrinho}<h1 style="font-size:2rem">Seu carrinho está vazio</h1><p>Adicione produtos para finalizar um pedido.</p><a class="btn btn-primario" href="produtos.html">Ver produtos</a></div>`;
+      }
+
+      if (!Carrinho.itens().length) return telaVazia();
+
+      area.append(qs("#tpl-checkout").content.cloneNode(true));
+      qsa("[data-icone]").forEach((el) => (el.outerHTML = ICONES[el.dataset.icone]));
+      qs("#destinatario").value = Auth.usuario().nome;
+      qs("#editar-carrinho").addEventListener("click", abrirDrawer);
+
+      // QR code decorativo
+      let qr = "";
+      for (let y = 0; y < 29; y++) for (let x = 0; x < 29; x++) {
+        const canto = (a, b) => x >= a && x < a + 7 && y >= b && y < b + 7;
+        const borda = (a, b) => canto(a, b) && (x === a || x === a + 6 || y === b || y === b + 6 || (x > a + 1 && x < a + 5 && y > b + 1 && y < b + 5));
+        const emCanto = canto(0, 0) || canto(22, 0) || canto(0, 22);
+        if (emCanto ? borda(0, 0) || borda(22, 0) || borda(0, 22) : ((x * 7 + y * 13 + x * y) % 5 < 2)) qr += `<rect x="${x}" y="${y}" width="1" height="1"/>`;
+      }
+      qs("#qr").innerHTML = qr;
+
+      // máscara CEP
+      qs("#cep").addEventListener("input", (e) => {
+        const d = e.target.value.replace(/\D/g, "").slice(0, 8);
+        e.target.value = d.length > 5 ? `${d.slice(0, 5)}-${d.slice(5)}` : d;
+      });
+
+      // troca de forma de pagamento
+      const pgAtual = () => qs('input[name="pagamento"]:checked').value;
+      qsa('input[name="pagamento"]').forEach((r) => r.addEventListener("change", () => {
+        qsa("[data-pg]").forEach((d) => (d.hidden = d.dataset.pg !== pgAtual()));
+      }));
+
+      // resumo (reage a mudanças no drawer)
+      let finalizado = false;
+      function renderResumo() {
+        if (finalizado) return;
+        if (!Carrinho.itens().length) return telaVazia();
+        const t = Carrinho.totais();
+        qs("#resumo-itens").innerHTML = Carrinho.detalhado().map(({ produto: p, qtd }) => `
+          <li><img src="${p.fotoCapa}" alt=""><div>${esc(p.nome)}<div class="q">${qtd} × ${brl(p.precoDesconto)}</div></div><strong>${brl(p.precoDesconto * qtd)}</strong></li>`).join("");
+        qs("#resumo-linhas").innerHTML = `
+          <div><span>Subtotal</span><span>${brl(t.subtotal)}</span></div>
+          ${t.economia > 0 ? `<div class="desconto"><span>Descontos aplicados</span><span>− ${brl(t.economia)}</span></div>` : ""}
+          <div><span>Frete</span><span>${t.frete ? brl(t.frete) : "Grátis"}</span></div>
+          <div class="total"><span>Total</span><span>${brl(t.total)}</span></div>`;
+        qs("#parcelas").innerHTML = [1, 2, 3].map((n) => `<option value="${n}">${n}x de ${brl(t.total / n)} sem juros</option>`).join("");
+      }
+      renderResumo();
+      const renderOriginal = window.renderDrawer;
+      window.renderDrawer = function () { renderOriginal(); if (qs("#resumo-itens")) renderResumo(); };
+
+      // envio
+      qs("#form-pedido").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const obrig = ["destinatario", "cep", "rua", "numero", "uf", "bairro", "cidade"];
+        const valido = (id) => id === "cep" ? qs("#cep").value.replace(/\D/g, "").length === 8 : qs("#" + id).value.trim() !== "";
+        const invalidos = obrig.filter((id) => {
+          const ok = valido(id);
+          qs("#" + id).closest(".campo").classList.toggle("invalido", !ok);
+          return !ok;
+        });
+        qs("#erro-form").hidden = !invalidos.length;
+        if (invalidos.length) return qs("#" + invalidos[0]).focus();
+
+        const v = (id) => qs("#" + id).value.trim();
+        // pedido.endereco é VARCHAR(255): endereço completo em uma linha
+        const endereco = `${v("destinatario")} — ${v("rua")}, ${v("numero")}${v("complemento") ? ", " + v("complemento") : ""} - ${v("bairro")}, ${v("cidade")}/${v("uf")} - CEP ${v("cep")}`.slice(0, 255);
+        const pg = pgAtual();
+        const metodo = pg === "Cartão de crédito" ? `Cartão de crédito (${qs("#parcelas").value}x)` : pg;
+        const t = Carrinho.totais();
+        const pedidos = store.get("nebulosa:pedidos", []);
+        const pedido = {
+          id: 1100 + pedidos.length + 1,
+          usuario_id: Auth.usuario().id,
+          endereco, metodoPagamento: metodo,
+          status: "pendente",
+          data: new Date().toISOString(),
+          dataEntrega: null,
+          frete: t.frete || null,   // pedido.frete (NULL = grátis)
+          total: t.total,           // pedido.total = itens + frete
+          itens: Carrinho.detalhado().map(({ produto: p, qtd }) => ({ produto_id: p.id, quantidade: qtd, preco: p.precoDesconto }))
+        };
+        pedidos.push(pedido);
+        store.set("nebulosa:pedidos", pedidos);
+        finalizado = true; // evita que o resumo vire "carrinho vazio" ao limpar
+        Carrinho.limpar();
+
+        qsa(".passos li").forEach((li, i) => { li.classList.toggle("atual", i === 2); li.toggleAttribute("aria-current", i === 2); });
+        area.innerHTML = `
+          <section class="confirmacao painel" style="margin:28px auto 56px;max-width:640px">
+            <div class="icone-ok">${ICONES.check}</div>
+            <h1 style="font-size:2.4rem">Pedido #${pedido.id} recebido!</h1>
+            <p>Obrigado pela compra, ${esc(Auth.usuario().nome.split(" ")[0])}! ✨<br>
+              ${pg === "Pix" ? "Pague com Pix em até 30 minutos para confirmar seu pedido." : pg === "Boleto" ? "Enviamos o boleto para o seu e-mail." : "Assim que o pagamento for aprovado, começamos a produção."}</p>
+            <p style="color:var(--texto-suave);font-size:.95rem">Total: <strong>${brl(t.total)}</strong> · ${esc(metodo)}<br>Entrega em: ${esc(endereco)}</p>
+            <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px">
+              <a class="btn btn-primario" href="perfil.html#pedidos">Acompanhar meus pedidos</a>
+              <a class="btn btn-contorno" href="produtos.html">Continuar comprando</a>
+            </div>
+          </section>`;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+  </script>
+</body>
+</html>

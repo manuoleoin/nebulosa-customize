@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minha conta — Nebulosa Costumize</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700&family=DM+Sans:wght@400;500;600;700&family=Josefin+Sans:wght@400;600;700&family=Sacramento&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>Auth.exigir();</script>
+</head>
+<body data-pagina="perfil">
+  <main>
+    <div class="perfil-topo">
+      <div class="container">
+        <h1 id="titulo-perfil">Minha conta</h1>
+        <p>Gerencie seus dados e acompanhe seus pedidos.</p>
+      </div>
+    </div>
+
+    <div class="container perfil-grid">
+      <aside class="perfil-menu" aria-label="Menu da conta">
+        <div class="avatar" id="avatar" aria-hidden="true"></div>
+        <div class="nome" id="menu-nome"></div>
+        <div class="email" id="menu-email"></div>
+        <nav>
+          <a href="#dados" class="ativo"><span data-icone="pessoa"></span> Meus dados</a>
+          <a href="#pedidos"><span data-icone="caixa"></span> Meus pedidos</a>
+          <a href="#excluir"><span data-icone="lixeira"></span> Excluir conta</a>
+        </nav>
+      </aside>
+
+      <div>
+        <!-- ===== Dados pessoais ===== -->
+        <section class="painel" id="dados" aria-labelledby="titulo-dados">
+          <div class="painel-cab">
+            <h2 id="titulo-dados">Meus dados</h2>
+            <button class="btn btn-contorno" id="btn-editar" type="button"><span data-icone="editar" style="width:18px;height:18px"></span> Editar dados</button>
+          </div>
+
+          <dl class="dados-lista" id="dados-visualizar">
+            <div><dt>Nome completo</dt><dd id="v-nome"></dd></div>
+            <div><dt>E-mail</dt><dd id="v-email"></dd></div>
+            <div><dt>Telefone</dt><dd id="v-telefone"></dd></div>
+            <div><dt>Senha</dt><dd>••••••••</dd></div>
+          </dl>
+
+          <form id="dados-editar" hidden novalidate>
+            <div class="form-linha">
+              <div class="campo"><label for="e-nome">Nome completo</label><input id="e-nome" maxlength="100" autocomplete="name" required><span class="erro">Informe nome e sobrenome.</span></div>
+              <div class="campo"><label for="e-email">E-mail</label><input id="e-email" type="email" maxlength="255" autocomplete="email" required><span class="erro">Informe um e-mail válido.</span></div>
+            </div>
+            <div class="form-linha">
+              <div class="campo"><label for="e-telefone">Telefone</label><input id="e-telefone" type="tel" autocomplete="tel" required><span class="erro">Informe um telefone com DDD.</span></div>
+              <div class="campo"><label for="e-senha-atual">Senha atual <small style="font-weight:400">(obrigatória para salvar)</small></label><input id="e-senha-atual" type="password" autocomplete="current-password" required><span class="erro">Confirme sua senha atual.</span></div>
+            </div>
+            <details style="margin-bottom:16px">
+              <summary style="cursor:pointer;color:var(--roxo);font-weight:600">Alterar senha</summary>
+              <div class="form-linha" style="margin-top:12px">
+                <div class="campo"><label for="e-nova">Nova senha</label><input id="e-nova" type="password" autocomplete="new-password"><span class="erro">Mínimo de 8 caracteres, com letras e números.</span></div>
+                <div class="campo"><label for="e-confirma">Confirmar nova senha</label><input id="e-confirma" type="password" autocomplete="new-password"><span class="erro">As senhas não conferem.</span></div>
+              </div>
+            </details>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-primario" type="submit">Salvar alterações</button>
+              <button class="btn btn-contorno" type="button" id="btn-cancelar">Cancelar</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- ===== Pedidos ===== -->
+        <section class="painel" id="pedidos" aria-labelledby="titulo-pedidos">
+          <div class="painel-cab">
+            <h2 id="titulo-pedidos">Meus pedidos</h2>
+            <span id="qtd-pedidos" style="color:var(--texto-suave)"></span>
+          </div>
+          <div class="pedidos" id="lista-pedidos"></div>
+        </section>
+
+        <!-- ===== Excluir conta ===== -->
+        <section class="painel" id="excluir" aria-labelledby="titulo-excluir">
+          <h2 id="titulo-excluir" class="sr-only">Excluir conta</h2>
+          <div class="zona-perigo">
+            <div>
+              <h3>Excluir minha conta</h3>
+              <p>Seus dados pessoais serão removidos permanentemente. Esta ação não pode ser desfeita.</p>
+            </div>
+            <button class="btn btn-perigo" id="btn-excluir" type="button">Excluir conta</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <dialog class="modal" id="modal-excluir" aria-labelledby="titulo-modal">
+      <form class="modal-corpo" method="dialog" id="form-excluir">
+        <h2 id="titulo-modal">Excluir conta?</h2>
+        <p>Essa ação é <strong>permanente</strong>. Você perderá acesso ao histórico de pedidos e às suas avaliações.</p>
+        <div class="campo">
+          <label for="confirma-excluir">Para confirmar, digite <strong>EXCLUIR</strong></label>
+          <input id="confirma-excluir" autocomplete="off">
+        </div>
+        <div class="modal-acoes">
+          <button class="btn btn-contorno" value="cancelar" formnovalidate>Cancelar</button>
+          <button class="btn btn-perigo-cheio" value="confirmar" id="confirmar-excluir" disabled>Excluir definitivamente</button>
+        </div>
+      </form>
+    </dialog>
+  </main>
+
+  <script>
+    const STATUS = ["pendente", "pago", "em produção", "enviado", "entregue"];
+    const classeStatus = (s) => "status-" + ({ "em produção": "producao" }[s] || s);
+    const rotuloStatus = (s) => ({ pendente: "Aguardando pagamento", pago: "Pago", "em produção": "Em produção", enviado: "Enviado", entregue: "Entregue", cancelado: "Cancelado" }[s] || s);
+
+    function mascaraTelefone(v) {
+      const d = v.replace(/\D/g, "").slice(0, 11);
+      if (d.length <= 2) return d.length ? `(${d}` : "";
+      if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+      if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+      return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if (!Auth.logado()) return;
+      qsa("[data-icone]").forEach((el) => (el.outerHTML = ICONES[el.dataset.icone]));
+
+      // ---------- dados ----------
+      function renderDados() {
+        const u = Auth.usuario();
+        qs("#avatar").textContent = iniciais(u.nome);
+        qs("#menu-nome").textContent = u.nome;
+        qs("#menu-email").textContent = u.email;
+        qs("#v-nome").textContent = u.nome;
+        qs("#v-email").textContent = u.email;
+        qs("#v-telefone").textContent = u.telefone || "—";
+        qs("#titulo-perfil").textContent = `Olá, ${u.nome.split(" ")[0]}!`;
+      }
+      renderDados();
+
+      const form = qs("#dados-editar");
+      const alternar = (editar) => {
+        form.hidden = !editar;
+        qs("#dados-visualizar").hidden = editar;
+        qs("#btn-editar").hidden = editar;
+        if (editar) {
+          const u = Auth.usuario();
+          qs("#e-nome").value = u.nome; qs("#e-email").value = u.email; qs("#e-telefone").value = u.telefone || "";
+          qs("#e-senha-atual").value = qs("#e-nova").value = qs("#e-confirma").value = "";
+          qsa(".campo", form).forEach((c) => c.classList.remove("invalido"));
+          qs("#e-nome").focus();
+        } else qs("#btn-editar").focus();
+      };
+      qs("#btn-editar").addEventListener("click", () => alternar(true));
+      qs("#btn-cancelar").addEventListener("click", () => alternar(false));
+      qs("#e-telefone").addEventListener("input", (e) => (e.target.value = mascaraTelefone(e.target.value)));
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const nova = qs("#e-nova").value;
+        const checks = {
+          "e-nome": qs("#e-nome").value.trim().split(/\s+/).length >= 2,
+          "e-email": qs("#e-email").checkValidity() && qs("#e-email").value.trim() !== "",
+          "e-telefone": qs("#e-telefone").value.replace(/\D/g, "").length >= 10,
+          "e-senha-atual": qs("#e-senha-atual").value.length > 0,
+          "e-nova": !nova || (nova.length >= 8 && /[a-z]/i.test(nova) && /\d/.test(nova)),
+          "e-confirma": nova === qs("#e-confirma").value
+        };
+        let primeiro = null;
+        for (const [id, ok] of Object.entries(checks)) {
+          qs("#" + id).closest(".campo").classList.toggle("invalido", !ok);
+          if (!ok && !primeiro) primeiro = id;
+        }
+        if (primeiro) {
+          if (primeiro.startsWith("e-nova") || primeiro === "e-confirma") qs("details", form).open = true;
+          return qs("#" + primeiro).focus();
+        }
+        const dados = { nome: qs("#e-nome").value.trim(), email: qs("#e-email").value.trim(), telefone: qs("#e-telefone").value };
+        Auth.atualizar(dados);
+        const contas = store.get("nebulosa:contas", []).map((c) => (c.id === Auth.usuario().id ? { ...c, ...dados } : c));
+        store.set("nebulosa:contas", contas);
+        renderDados();
+        alternar(false);
+        toast(nova ? "Dados e senha atualizados!" : "Dados atualizados com sucesso!");
+      });
+
+      // ---------- pedidos ----------
+      const user = Auth.usuario();
+      const pedidos = [...store.get("nebulosa:pedidos", []), ...PEDIDOS]
+        .filter((p) => p.usuario_id === user.id)
+        .sort((a, b) => new Date(b.data) - new Date(a.data));
+      qs("#qtd-pedidos").textContent = `${pedidos.length} ${pedidos.length === 1 ? "pedido" : "pedidos"}`;
+
+      qs("#lista-pedidos").innerHTML = pedidos.length ? pedidos.map((ped, i) => {
+        const subtotal = ped.itens.reduce((s, it) => s + it.preco * it.quantidade, 0);
+        const frete = ped.frete || 0; // pedido.frete NULL = frete grátis
+        const qtdItens = ped.itens.reduce((s, it) => s + it.quantidade, 0);
+        const etapa = STATUS.indexOf(ped.status);
+        return `
+        <details class="pedido" ${i === 0 ? "open" : ""}>
+          <summary>
+            <div><span class="lbl">Pedido</span><span class="val">#${ped.id}</span></div>
+            <div><span class="lbl">Data</span><span class="val">${dataBR(ped.data)}</span></div>
+            <div><span class="lbl">Total</span><span class="val">${brl(ped.total)}</span></div>
+            <div><span class="status ${classeStatus(ped.status)}">${rotuloStatus(ped.status)}</span></div>
+            ${ICONES.seta.replace("<svg", '<svg class="seta" aria-hidden="true"')}
+          </summary>
+          <div class="pedido-corpo">
+            ${ped.status !== "cancelado" ? `<ol class="linha-tempo" aria-label="Andamento do pedido">
+              ${STATUS.map((s, k) => `<li class="${k <= etapa ? "feito" : ""}">${rotuloStatus(s)}</li>`).join("")}
+            </ol>` : `<div class="alerta alerta-erro" style="margin:0">Este pedido foi cancelado.</div>`}
+            <table class="itens-pedido">
+              <caption class="sr-only">Itens do pedido #${ped.id}</caption>
+              <thead><tr><th>Produto</th><th class="num">Qtd.</th><th class="num col-unit">Preço un.</th><th class="num">Subtotal</th></tr></thead>
+              <tbody>
+                ${ped.itens.map((it) => {
+                  const p = getProduto(it.produto_id);
+                  return `<tr>
+                    <td><div class="item-produto"><img src="${p.fotoCapa}" alt=""><a href="produto.html?id=${p.id}">${esc(p.nome)}</a></div></td>
+                    <td class="num">${it.quantidade}</td>
+                    <td class="num col-unit">${brl(it.preco)}</td>
+                    <td class="num">${brl(it.preco * it.quantidade)}</td>
+                  </tr>`;
+                }).join("")}
+              </tbody>
+              <tfoot>
+                <tr><td colspan="3" style="font-weight:500">Itens (${qtdItens})</td><td class="num" style="font-weight:500">${brl(subtotal)}</td></tr>
+                <tr><td colspan="3" style="font-weight:500">Frete</td><td class="num" style="font-weight:500">${frete ? brl(frete) : "Grátis"}</td></tr>
+                <tr><td colspan="3">Total do pedido</td><td class="num">${brl(ped.total)}</td></tr>
+              </tfoot>
+            </table>
+            <div class="pedido-detalhes">
+              <div><span class="lbl">Endereço de entrega</span>${esc(ped.endereco || "—")}</div>
+              <div><span class="lbl">Pagamento</span>${esc(ped.metodoPagamento || "—")}</div>
+              <div><span class="lbl">${ped.dataEntrega ? "Entregue em" : "Entrega"}</span>${ped.dataEntrega ? dataBR(ped.dataEntrega, true) : ped.status === "cancelado" ? "—" : "Previsão em até 10 dias úteis"}</div>
+            </div>
+            ${ped.status === "entregue" ? `<p style="margin:0;font-size:.9rem">Gostou? <a href="produto.html?id=${ped.itens[0].produto_id}#secao-avaliacoes">Avalie os produtos deste pedido ⭐</a></p>` : ""}
+          </div>
+        </details>`;
+      }).join("") : `<div class="vazio">${ICONES.caixa}<p><strong>Você ainda não fez nenhum pedido.</strong></p><a class="btn btn-primario" href="produtos.html">Explorar produtos</a></div>`;
+
+      // ---------- menu ativo ----------
+      const links = qsa(".perfil-menu nav a");
+      const obs = new IntersectionObserver((ents) => ents.forEach((en) => {
+        if (en.isIntersecting) links.forEach((l) => l.classList.toggle("ativo", l.getAttribute("href") === "#" + en.target.id));
+      }), { rootMargin: "-40% 0px -55% 0px" });
+      qsa(".painel").forEach((s) => obs.observe(s));
+
+      // ---------- excluir conta ----------
+      const modal = qs("#modal-excluir");
+      const campo = qs("#confirma-excluir");
+      qs("#btn-excluir").addEventListener("click", () => { campo.value = ""; qs("#confirmar-excluir").disabled = true; modal.showModal(); campo.focus(); });
+      campo.addEventListener("input", () => (qs("#confirmar-excluir").disabled = campo.value.trim().toUpperCase() !== "EXCLUIR"));
+      modal.addEventListener("close", () => {
+        if (modal.returnValue !== "confirmar") return;
+        const id = Auth.usuario().id;
+        store.set("nebulosa:contas", store.get("nebulosa:contas", []).filter((c) => c.id !== id));
+        store.del("nebulosa:pedidos");
+        store.del("nebulosa:avaliacoes");
+        Auth.sair();
+        sessionStorage.setItem("nebulosa:toast", "Sua conta foi excluída. Sentiremos sua falta 💜");
+        location.href = "index.html";
+      });
+    });
+  </script>
+</body>
+</html>

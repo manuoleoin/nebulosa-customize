@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produto — Nebulosa Costumize</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700&family=DM+Sans:wght@400;500;600;700&family=Josefin+Sans:wght@400;600;700&family=Sacramento&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-pagina="produtos">
+  <main>
+    <div class="container" id="conteudo"></div>
+
+    <section class="secao" aria-labelledby="titulo-avaliacoes" id="secao-avaliacoes">
+      <div class="container">
+        <h2 id="titulo-avaliacoes" style="font-size:2.4rem;font-weight:500">Avaliações</h2>
+        <div class="avaliacoes">
+          <div class="resumo-nota" id="resumo-nota"></div>
+          <div>
+            <div id="area-form-avaliacao"></div>
+            <ul class="lista-avaliacoes" id="lista-avaliacoes"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="secao secao-escura" aria-labelledby="titulo-relacionados">
+      <div class="container">
+        <div class="secao-cabecalho">
+          <h2 id="titulo-relacionados">Você também pode gostar</h2>
+          <a class="link-seta" href="produtos.html">Ver todos <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="grid-produtos" id="grid-relacionados"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const id = Number(new URLSearchParams(location.search).get("id")) || 1;
+      const p = getProduto(id);
+      if (!p) {
+        qs("#conteudo").innerHTML = `<div class="vazio">${ICONES.caixa}<h1>Produto não encontrado</h1><a class="btn btn-primario" href="produtos.html">Voltar à loja</a></div>`;
+        qs("#secao-avaliacoes").hidden = true;
+        return;
+      }
+      document.title = `${p.nome} — Nebulosa Costumize`;
+      const temDesconto = p.precoDesconto < p.preco;
+
+      qs("#conteudo").innerHTML = `
+        <nav class="migalha" aria-label="Você está em">
+          <a href="index.html">Início</a> / <a href="produtos.html">Produtos</a> /
+          <a href="produtos.html?categoria=${encodeURIComponent(p.categoria)}">${esc(p.categoria)}</a> /
+          <span aria-current="page">${esc(p.nome)}</span>
+        </nav>
+        <article class="produto-detalhe">
+          <div class="produto-galeria"><img src="${p.fotoCapa}" alt="${esc(p.nome)}"></div>
+          <div class="produto-info">
+            <h1>${esc(p.nome)}</h1>
+            <p class="produto-desc">${esc(p.descricao)}</p>
+            <a class="produto-nota" href="#secao-avaliacoes" id="nota-topo" style="text-decoration:none"></a>
+            <ul class="produto-atributos">
+              ${p.cor ? `<li><b>Cor:</b> ${esc(p.cor)}</li>` : ""}
+              ${p.tamanho ? `<li><b>Tamanho:</b> ${esc(p.tamanho)}</li>` : ""}
+              <li><b>Categoria:</b> ${esc(p.categoria)}</li>
+            </ul>
+          </div>
+          <div class="produto-compra">
+            <div class="produto-precos">
+              ${temDesconto ? `<span class="preco-de"><span class="sr-only">De </span>${brl(p.preco)}</span>` : ""}
+              <span class="preco-por">${temDesconto ? '<span class="sr-only">por </span>' : ""}${brl(p.precoDesconto)}</span>
+              <div class="parcelas">ou 3x de ${brl(p.precoDesconto / 3)} sem juros no cartão</div>
+              <div class="produto-pagamentos" aria-label="Formas de pagamento: cartão e Pix">${ICONES.cartao}${ICONES.pix}</div>
+            </div>
+            <form class="produto-acoes" id="form-compra">
+              <div class="qtd" role="group" aria-label="Quantidade">
+                <button type="button" id="qtd-menos" aria-label="Diminuir quantidade">−</button>
+                <input type="number" id="qtd" min="1" max="99" value="1" aria-label="Quantidade">
+                <button type="button" id="qtd-mais" aria-label="Aumentar quantidade">+</button>
+              </div>
+              <button class="btn-add-grande" type="submit">Adicionar ao carrinho ${ICONES.carrinho}</button>
+            </form>
+          </div>
+        </article>`;
+
+      // quantidade + adicionar
+      const inp = qs("#qtd");
+      const clamp = (v) => Math.max(1, Math.min(99, v || 1));
+      qs("#qtd-menos").addEventListener("click", () => (inp.value = clamp(+inp.value - 1)));
+      qs("#qtd-mais").addEventListener("click", () => (inp.value = clamp(+inp.value + 1)));
+      qs("#form-compra").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const q = clamp(+inp.value);
+        Carrinho.adicionar(p.id, q);
+        abrirDrawer();
+      });
+
+      // ---------- avaliações ----------
+      function renderAvaliacoes() {
+        const lista = avaliacoesDo(p.id).sort((a, b) => new Date(b.data) - new Date(a.data));
+        const media = notaMedia(p.id);
+
+        qs("#nota-topo").innerHTML = media
+          ? `${media.toFixed(1)} ${ICONES.estrela} <small>(${lista.length} ${lista.length === 1 ? "avaliação" : "avaliações"})</small>`
+          : `<small>Ainda sem avaliações</small>`;
+
+        const faixas = [5, 4, 3, 2, 1].map((n) => {
+          const qtd = lista.filter((a) => Math.round(a.nota) === n).length;
+          return `<div><span>${n}★</span><span class="trilho"><i style="width:${lista.length ? (qtd / lista.length) * 100 : 0}%"></i></span><span>${qtd}</span></div>`;
+        }).join("");
+        qs("#resumo-nota").innerHTML = media
+          ? `<div class="grande">${media.toFixed(1)}</div>${estrelasHTML(media)}<p style="margin:6px 0 0">${lista.length} ${lista.length === 1 ? "avaliação" : "avaliações"}</p><div class="barras">${faixas}</div>`
+          : `<p>Este produto ainda não foi avaliado.</p>`;
+
+        qs("#lista-avaliacoes").innerHTML = lista.map((a) => {
+          const u = a.usuario_id === Auth.usuario()?.id ? Auth.usuario() : USUARIOS.find((x) => x.id === a.usuario_id);
+          const nome = u ? u.nome : "Cliente";
+          return `<li>
+            <span class="avatar" aria-hidden="true">${iniciais(nome)}</span>
+            <div><strong>${esc(nome)}</strong> ${estrelasHTML(Number(a.nota))}
+            <div class="meta">Nota ${Number(a.nota).toFixed(1)} · ${dataBR(a.data)}</div></div>
+          </li>`;
+        }).join("") || `<li>Seja a primeira pessoa a avaliar!</li>`;
+
+        renderFormAvaliacao(lista);
+      }
+
+      // formulário só aparece para usuário logado
+      function renderFormAvaliacao(lista) {
+        const area = qs("#area-form-avaliacao");
+        const user = Auth.usuario();
+        if (!user) {
+          area.innerHTML = `<div class="aviso-login"><span>Comprou este produto? <strong>Entre na sua conta</strong> para avaliar.</span>
+            <a class="btn btn-primario" href="login.html?volta=${encodeURIComponent("produto.html?id=" + p.id)}">Entrar para avaliar</a></div>`;
+          return;
+        }
+        // PK (usuario_id, produto_id): uma avaliação por usuário/produto -> reenviar atualiza
+        const minha = lista.find((a) => a.usuario_id === user.id);
+        const estrelas = [5, 4, 3, 2, 1].map((n) => `
+          <input type="radio" name="nota" id="nota-${n}" value="${n}" ${minha && Math.round(minha.nota) === n ? "checked" : ""} required>
+          <label for="nota-${n}" title="${n} ${n === 1 ? "estrela" : "estrelas"}">${ICONES.estrela}<span class="sr-only">${n} ${n === 1 ? "estrela" : "estrelas"}</span></label>`).join("");
+        area.innerHTML = `
+          <form class="form-avaliacao" id="form-avaliacao">
+            <h3>${minha ? "Atualize sua avaliação" : "Avalie este produto"}</h3>
+            <p style="margin:0;color:var(--texto-suave)">${minha ? `Você avaliou em ${dataBR(minha.data)}. Escolha uma nova nota para atualizar.` : "Qual nota você dá para este produto?"}</p>
+            <fieldset class="seletor-estrelas"><legend class="sr-only">Nota de 1 a 5</legend>${estrelas}</fieldset>
+            <div><button class="btn btn-primario" type="submit">${minha ? "Atualizar avaliação" : "Enviar avaliação"}</button></div>
+          </form>`;
+        qs("#form-avaliacao").addEventListener("submit", (e) => {
+          e.preventDefault();
+          const nota = Number(new FormData(e.target).get("nota"));
+          const extras = store.get("nebulosa:avaliacoes", []).filter((a) => !(a.usuario_id === user.id && a.produto_id === p.id));
+          extras.push({ usuario_id: user.id, produto_id: p.id, data: new Date().toISOString(), nota });
+          store.set("nebulosa:avaliacoes", extras);
+          // remove a avaliação mockada do mesmo usuário, se houver (simula o UPSERT)
+          window.AVALIACOES = AVALIACOES.filter((a) => !(a.usuario_id === user.id && a.produto_id === p.id));
+          toast("Obrigado pela sua avaliação! ⭐");
+          renderAvaliacoes();
+        });
+      }
+      renderAvaliacoes();
+
+      // relacionados: mesma categoria primeiro
+      const rel = PRODUTOS.filter((x) => x.id !== p.id)
+        .sort((a, b) => (b.categoria === p.categoria) - (a.categoria === p.categoria))
+        .slice(0, 4);
+      qs("#grid-relacionados").innerHTML = rel.map(cardProduto).join("");
+    });
+  </script>
+</body>
+</html>
