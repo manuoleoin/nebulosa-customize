@@ -6,11 +6,11 @@ export default function RolarParaTopo() {
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    if (hash) {
-      const alvo = document.getElementById(hash.slice(1));
-      if (alvo) return alvo.scrollIntoView();
-    }
-    window.scrollTo(0, 0);
+    const alvo = hash && document.getElementById(hash.slice(1));
+    // não usar `return alvo.scrollIntoView()`: nos navegadores novos ele devolve uma Promise,
+    // e o React trata o retorno do useEffect como função de limpeza ("destroy is not a function")
+    if (alvo) alvo.scrollIntoView();
+    else window.scrollTo(0, 0);
   }, [pathname, hash]);
 
   return null;

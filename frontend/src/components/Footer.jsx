@@ -1,12 +1,12 @@
 import { Link } from "react-router";
-import { IconeFacebook, IconeInstagram, IconeTiktok, IconeWhatsapp } from "./Icones";
+import { FacebookLogo, InstagramLogo, TiktokLogo, WhatsappLogo } from "@phosphor-icons/react";
 import Logo from "./Logo";
 
 const REDES = [
-  { nome: "WhatsApp", Icone: IconeWhatsapp },
-  { nome: "Instagram", Icone: IconeInstagram },
-  { nome: "Facebook", Icone: IconeFacebook },
-  { nome: "TikTok", Icone: IconeTiktok },
+  { nome: "WhatsApp", Icone: WhatsappLogo },
+  { nome: "Instagram", Icone: InstagramLogo },
+  { nome: "Facebook", Icone: FacebookLogo },
+  { nome: "TikTok", Icone: TiktokLogo },
 ];
 
 export default function Footer() {

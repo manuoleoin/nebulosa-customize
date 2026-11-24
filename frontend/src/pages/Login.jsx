@@ -1,7 +1,7 @@
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router";
 import Campo from "../components/Campo";
 import { Alerta } from "../components/Feedback";
-import { IconeCadeado, IconeEmail } from "../components/Icones";
+import { Envelope, Lock } from "@phosphor-icons/react";
 import { useFormulario } from "../hooks/useFormulario";
 import { useTitulo } from "../hooks/useTitulo";
 import AuthLayout from "../layouts/AuthLayout";
@@ -43,8 +43,8 @@ export default function Login() {
         )}
         <Alerta tipo="erro">{erroGeral}</Alerta>
 
-        <Campo rotulo="E-mail" name="email" type="email" autoComplete="email" placeholder="seuemail@exemplo.com" icone={IconeEmail} value={valores.email} onChange={alterar()} erro={erros.email} required />
-        <Campo rotulo="Senha" name="senha" type="password" autoComplete="current-password" placeholder="Sua senha" icone={IconeCadeado} value={valores.senha} onChange={alterar()} erro={erros.senha} required />
+        <Campo rotulo="E-mail" name="email" type="email" autoComplete="email" placeholder="seuemail@exemplo.com" icone={Envelope} value={valores.email} onChange={alterar()} erro={erros.email} required />
+        <Campo rotulo="Senha" name="senha" type="password" autoComplete="current-password" placeholder="Sua senha" icone={Lock} value={valores.senha} onChange={alterar()} erro={erros.senha} required />
 
         <button type="submit" className="btn btn-primario w-full" disabled={enviando}>
           {enviando ? "Entrando..." : "Entrar"}

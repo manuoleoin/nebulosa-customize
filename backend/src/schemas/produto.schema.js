@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CATEGORIAS_PRODUTO } from "../utils/regras.js";
 
 export const ORDENS = ["relevancia", "recentes", "menor-preco", "maior-preco", "avaliacao"];
 
@@ -35,7 +36,11 @@ export const produtoSchema = z
     descricao: textoOpcional(5000),
     cor: textoOpcional(45),
     tamanho: textoOpcional(45),
-    categoria: textoOpcional(100),
+    // VARCHAR no banco, mas só aceita as categorias da lista (ver README)
+    categoria: z
+      .union([z.literal(""), z.enum(CATEGORIAS_PRODUTO, { error: `Categoria inválida. Use: ${CATEGORIAS_PRODUTO.join(", ")}.` })])
+      .optional()
+      .transform((v) => v || null),
   })
   .refine((d) => d.precoDesconto <= d.preco, {
     error: "O preço com desconto não pode ser maior que o preço.",

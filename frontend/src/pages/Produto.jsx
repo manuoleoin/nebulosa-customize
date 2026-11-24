@@ -4,7 +4,7 @@ import CampoQuantidade from "../components/CampoQuantidade";
 import Estrelas from "../components/Estrelas";
 import { Alerta, Carregando, EstadoVazio } from "../components/Feedback";
 import GradeProdutos from "../components/GradeProdutos";
-import { IconeCaixa, IconeCarrinho, IconeCartao, IconeEstrela, IconePix } from "../components/Icones";
+import { CreditCard, Package, PixLogo, ShoppingCartSimple, Star } from "@phosphor-icons/react";
 import SeletorEstrelas from "../components/SeletorEstrelas";
 import { useApi } from "../hooks/useApi";
 import { useTitulo } from "../hooks/useTitulo";
@@ -33,7 +33,7 @@ export default function Produto() {
   if (carregando && !produto) return <Carregando />;
   if (erro?.status === 404)
     return (
-      <EstadoVazio icone={IconeCaixa} titulo="Produto não encontrado">
+      <EstadoVazio icone={Package} titulo="Produto não encontrado">
         <Link to="/produtos" className="btn btn-primario mt-4">Voltar à loja</Link>
       </EstadoVazio>
     );
@@ -93,7 +93,7 @@ function DetalheProduto({ produto: p }) {
         <a href="#avaliacoes" className="flex items-center gap-2.5 font-preco text-[2.2rem] text-roxo no-underline">
           {p.notaMedia != null ? (
             <>
-              {p.notaMedia.toFixed(1)} <IconeEstrela className="size-10" />
+              {p.notaMedia.toFixed(1)} <Star weight="fill" className="size-10" />
               <small className="font-sans text-sm text-texto-suave">
                 ({p.totalAvaliacoes} {p.totalAvaliacoes === 1 ? "avaliação" : "avaliações"})
               </small>
@@ -126,8 +126,8 @@ function DetalheProduto({ produto: p }) {
           </span>
           <p className="text-sm text-texto-suave">ou 3x de {brl(p.precoDesconto / 3)} sem juros no cartão</p>
           <div className="mt-5.5 flex items-center gap-6" aria-label="Formas de pagamento: cartão e Pix">
-            <IconeCartao className="h-11" />
-            <IconePix className="h-11" />
+            <CreditCard weight="duotone" className="size-11 text-roxo-escuro" />
+            <PixLogo weight="duotone" className="size-11 text-roxo-escuro" />
           </div>
         </div>
         <form onSubmit={comprar} className="flex flex-wrap items-center justify-center gap-4.5 md:justify-self-center">
@@ -136,7 +136,7 @@ function DetalheProduto({ produto: p }) {
             type="submit"
             className="inline-flex cursor-pointer items-center gap-[.6em] rounded-xl bg-amarelo-2 px-[1em] py-[.3em] font-preco text-[clamp(1.3rem,2.6vw,2.2rem)] text-white [text-shadow:0_1px_1px_rgb(0_0_0/.12)] hover:bg-amarelo-escuro"
           >
-            Adicionar ao carrinho <IconeCarrinho className="size-[1.3em]" />
+            Adicionar ao carrinho <ShoppingCartSimple className="size-[1.3em]" />
           </button>
         </form>
       </div>
@@ -156,8 +156,13 @@ function Avaliacoes({ produto, aoAvaliar }) {
         <div className="grid items-start gap-10 md:grid-cols-[320px_1fr]">
           <ResumoNotas produto={produto} />
           <div>
-            {usuario ? (
+            {usuario && produto.podeAvaliar ? (
               <FormAvaliacao produtoId={produto.id} minha={minha} aoAvaliar={aoAvaliar} />
+            ) : usuario ? (
+              // regra: só avalia quem comprou e recebeu (o backend também bloqueia)
+              <div className="mb-5.5 rounded-[14px] bg-lilas-2 px-5.5 py-4.5">
+                Só quem <strong>comprou e recebeu</strong> este produto pode avaliá-lo. Depois que seu pedido for entregue, volte aqui para dar sua nota!
+              </div>
             ) : (
               <div className="mb-5.5 flex flex-wrap items-center justify-between gap-4 rounded-[14px] bg-lilas-2 px-5.5 py-4.5">
                 <span>Comprou este produto? <strong>Entre na sua conta</strong> para avaliar.</span>

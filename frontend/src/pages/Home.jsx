@@ -1,20 +1,20 @@
 import { Link } from "react-router";
 import { Alerta, Carregando } from "../components/Feedback";
 import GradeProdutos from "../components/GradeProdutos";
-import { IconeCaixa, IconeCaminhao, IconeFolha, IconePessoa } from "../components/Icones";
+import { Leaf, Package, Truck, User } from "@phosphor-icons/react";
 import { useApi } from "../hooks/useApi";
 import { useTitulo } from "../hooks/useTitulo";
 import { produtoService } from "../services/produtoService";
 
 const MATERIAIS = [
-  [IconeFolha, "Algodão certificado", "Camisetas, moletons e ecobags com algodão de origem rastreável e tingimento de baixo impacto."],
-  [IconeFolha, "Tintas à base d'água", "Estampas em silk e sublimação sem solventes tóxicos, seguras para você e para o planeta."],
-  [IconeFolha, "Embalagens recicláveis", "Papel kraft, fita de papel e zero plástico bolha: tudo pode voltar para a reciclagem."],
+  [Leaf, "Algodão certificado", "Camisetas, moletons e ecobags com algodão de origem rastreável e tingimento de baixo impacto."],
+  [Leaf, "Tintas à base d'água", "Estampas em silk e sublimação sem solventes tóxicos, seguras para você e para o planeta."],
+  [Leaf, "Embalagens recicláveis", "Papel kraft, fita de papel e zero plástico bolha: tudo pode voltar para a reciclagem."],
 ];
 const FABRICACAO = [
-  [IconeCaixa, "Produção sob demanda", "Só produzimos depois do seu pedido. Nada de estoque parado nem desperdício."],
-  [IconePessoa, "Ateliê local", "Cada peça é finalizada à mão pela nossa equipe, com conferência de qualidade."],
-  [IconeCaminhao, "Entrega compensada", "Compensamos a emissão de carbono de todos os envios para qualquer lugar do Brasil."],
+  [Package, "Produção sob demanda", "Só produzimos depois do seu pedido. Nada de estoque parado nem desperdício."],
+  [User, "Ateliê local", "Cada peça é finalizada à mão pela nossa equipe, com conferência de qualidade."],
+  [Truck, "Entrega compensada", "Compensamos a emissão de carbono de todos os envios para qualquer lugar do Brasil."],
 ];
 const FAQ = [
   ["O material utilizado na produção é sustentável?", "Sim! Trabalhamos com algodão certificado, tintas à base d'água e embalagens 100% recicláveis."],

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import * as ctrl from "../controllers/produto.controller.js";
-import { autenticar, exigirAdmin } from "../middlewares/auth.js";
+import { autenticar, autenticarOpcional, exigirAdmin } from "../middlewares/auth.js";
 import { uploadImagemProduto } from "../middlewares/upload.js";
 
 const router = Router();
@@ -8,7 +8,7 @@ const router = Router();
 // públicas
 router.get("/", ctrl.listar);
 router.get("/categorias", ctrl.categorias);
-router.get("/:id", ctrl.detalhar);
+router.get("/:id", autenticarOpcional, ctrl.detalhar); // logado: traz podeAvaliar
 
 // cliente logado
 router.put("/:id/avaliacao", autenticar, ctrl.avaliar);

@@ -93,18 +93,38 @@ async function main() {
     });
   }
 
-  console.log("📦 Pedidos de exemplo da Marina...");
-  const marina = porEmail["marina@exemplo.com"].id;
-  const endereco = "Marina Alves Costa — Rua das Estrelas, 120, Apto 31 - Vila Mariana, São Paulo/SP - CEP 04101-000";
+  console.log("📦 Pedidos...");
+  // Só avalia quem recebeu o produto: quem tem avaliação no seed ganha um pedido "entregue" com esses produtos
+  const comprasDosAvaliadores = Object.entries(
+    Object.groupBy(avaliacoes, ([email]) => email)
+  ).map(([email, lista], k) => ({
+    email, status: "entregue", metodoPagamento: "Pix", data: diasAtras(40 + k), dataEntrega: diasAtras(33 + k),
+    itens: lista.map(([, idx]) => [idx, 1]),
+  }));
+
+  // Marina tem um pedido em vários status para ver as telas
   const pedidos = [
-    { status: "enviado", metodoPagamento: "Pix", frete: 19.9, data: diasAtras(8), itens: [[0, 2], [7, 1]] },
-    { status: "entregue", metodoPagamento: "Cartão de crédito (3x)", frete: null, data: diasAtras(52), dataEntrega: diasAtras(45), itens: [[5, 1], [2, 1], [9, 3]] },
+    { email: "marina@exemplo.com", status: "pendente", metodoPagamento: "Boleto", data: diasAtras(1), itens: [[4, 2]] },
+    { email: "marina@exemplo.com", status: "enviado", metodoPagamento: "Pix", data: diasAtras(8), itens: [[0, 2], [7, 1]] },
+    { email: "marina@exemplo.com", status: "cancelado", metodoPagamento: "Pix", data: diasAtras(20), itens: [[10, 1]] },
+    { email: "marina@exemplo.com", status: "entregue", metodoPagamento: "Cartão de crédito (3x)", data: diasAtras(52), dataEntrega: diasAtras(45), itens: [[5, 1], [2, 1], [9, 3]] },
+    ...comprasDosAvaliadores,
   ];
-  for (const { itens, ...p } of pedidos) {
+
+  for (const { email, itens, ...p } of pedidos) {
+    const usuario = porEmail[email];
     const linhas = itens.map(([idx, quantidade]) => ({ produtoId: criados[idx].id, quantidade, preco: Number(criados[idx].precoDesconto) }));
     const subtotal = linhas.reduce((s, l) => s + l.preco * l.quantidade, 0);
+    const frete = subtotal >= 199 ? null : 19.9; // mesma regra de src/utils/regras.js
     await prisma.pedido.create({
-      data: { ...p, usuarioId: marina, endereco, total: Math.round((subtotal + (p.frete ?? 0)) * 100) / 100, itens: { create: linhas } },
+      data: {
+        ...p,
+        usuarioId: usuario.id,
+        endereco: `${usuario.nome} — Rua das Estrelas, 120, Apto 31 - Vila Mariana, São Paulo/SP - CEP 04101-000`,
+        frete,
+        total: Math.round((subtotal + (frete ?? 0)) * 100) / 100,
+        itens: { create: linhas },
+      },
     });
   }
 

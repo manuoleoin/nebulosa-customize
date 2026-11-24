@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import Campo from "../components/Campo";
 import { Alerta, Carregando, EstadoVazio } from "../components/Feedback";
-import { IconeCaixa, IconeEditar, IconeLixeira, IconePessoa, IconeSeta } from "../components/Icones";
+import { CaretDown, Package, PencilSimple, Trash, User } from "@phosphor-icons/react";
 import { useApi } from "../hooks/useApi";
 import { useFormulario } from "../hooks/useFormulario";
 import { useTitulo } from "../hooks/useTitulo";
@@ -11,7 +11,7 @@ import { usuarioService } from "../services/usuarioService";
 import { useAuthStore } from "../stores/authStore";
 import { toast } from "../stores/toastStore";
 import { brl, dataBR, iniciais, mascaraTelefone, primeiroNome } from "../utils/formatar";
-import { ETAPAS_PEDIDO, ROTULO_STATUS } from "../utils/regras";
+import { ETAPAS_PEDIDO, ROTULO_STATUS, STATUS_PERMITE_AVALIAR } from "../utils/regras";
 
 export default function Perfil() {
   useTitulo("Minha conta");
@@ -34,7 +34,7 @@ export default function Perfil() {
           <div className="text-center font-bold">{usuario.nome}</div>
           <div className="mb-4 text-center text-sm break-all text-texto-suave">{usuario.email}</div>
           <nav className="grid">
-            {[["#dados", IconePessoa, "Meus dados"], ["#pedidos", IconeCaixa, "Meus pedidos"], ["#excluir", IconeLixeira, "Excluir conta"]].map(([href, Icone, texto]) => (
+            {[["#dados", User, "Meus dados"], ["#pedidos", Package, "Meus pedidos"], ["#excluir", Trash, "Excluir conta"]].map(([href, Icone, texto]) => (
               <a key={href} href={href} className="flex items-center gap-2.5 rounded-[10px] px-3 py-2.5 font-medium text-roxo-escuro no-underline hover:bg-lilas-2 hover:text-roxo">
                 <Icone className="size-5" /> {texto}
               </a>
@@ -83,7 +83,7 @@ function DadosPessoais() {
         <h2 id="titulo-dados" className="text-[1.9rem]">Meus dados</h2>
         {!editando && (
           <button type="button" className="btn btn-contorno" onClick={iniciarEdicao}>
-            <IconeEditar /> Editar dados
+            <PencilSimple /> Editar dados
           </button>
         )}
       </div>
@@ -135,6 +135,15 @@ const COR_STATUS = {
   enviado: "bg-[#E0F4F4] text-[#136B6B]",
   entregue: "bg-[#E8F6EE] text-[#1E6B3E]",
   cancelado: "bg-[#FDECEA] text-[#A23224]",
+  "devolução solicitada": "bg-[#FFEBD9] text-[#9A4A0B]",
+  devolvido: "bg-[#ECEAF0] text-[#4B4558]",
+};
+
+/** Status fora do fluxo normal: mostram um aviso no lugar da linha do tempo */
+const AVISO_STATUS = {
+  cancelado: ["erro", "Este pedido foi cancelado."],
+  "devolução solicitada": ["info", "Recebemos seu pedido de devolução. Assim que o produto chegar ao ateliê, fazemos o reembolso."],
+  devolvido: ["info", "Produto devolvido e valor reembolsado."],
 };
 
 function Status({ status }) {
@@ -159,7 +168,7 @@ function MeusPedidos() {
       {carregando && <Carregando />}
       <Alerta tipo="erro">{erro?.message}</Alerta>
       {pedidos?.length === 0 && (
-        <EstadoVazio icone={IconeCaixa} titulo="Você ainda não fez nenhum pedido.">
+        <EstadoVazio icone={Package} titulo="Você ainda não fez nenhum pedido.">
           <Link to="/produtos" className="btn btn-primario mt-4">Explorar produtos</Link>
         </EstadoVazio>
       )}
@@ -181,12 +190,12 @@ function Pedido({ pedido: p, aberto }) {
         <div><Rotulo>Data</Rotulo><span className="font-bold">{dataBR(p.data)}</span></div>
         <div><Rotulo>Total</Rotulo><span className="font-bold">{brl(p.total)}</span></div>
         <div><Status status={p.status} /></div>
-        <IconeSeta className="size-5.5 text-roxo transition group-open:rotate-180" />
+        <CaretDown className="size-5.5 text-roxo transition group-open:rotate-180" />
       </summary>
 
       <div className="grid gap-4.5 p-4.5">
-        {p.status === "cancelado" ? (
-          <Alerta tipo="erro" className="mb-0">Este pedido foi cancelado.</Alerta>
+        {AVISO_STATUS[p.status] ? (
+          <Alerta tipo={AVISO_STATUS[p.status][0]} className="mb-0">{AVISO_STATUS[p.status][1]}</Alerta>
         ) : (
           <ol aria-label="Andamento do pedido" className="flex">
             {ETAPAS_PEDIDO.map((s, k) => (
@@ -241,10 +250,10 @@ function Pedido({ pedido: p, aberto }) {
           <div className="rounded-[10px] bg-creme px-3.5 py-2.5"><Rotulo>Pagamento</Rotulo>{p.metodoPagamento || "—"}</div>
           <div className="rounded-[10px] bg-creme px-3.5 py-2.5">
             <Rotulo>{p.dataEntrega ? "Entregue em" : "Entrega"}</Rotulo>
-            {p.dataEntrega ? dataBR(p.dataEntrega, true) : p.status === "cancelado" ? "—" : "Previsão em até 10 dias úteis"}
+            {p.dataEntrega ? dataBR(p.dataEntrega, true) : AVISO_STATUS[p.status] ? "—" : "Previsão em até 10 dias úteis"}
           </div>
         </div>
-        {p.status === "entregue" && (
+        {STATUS_PERMITE_AVALIAR.includes(p.status) && (
           <p className="text-sm">
             Gostou? <Link to={`/produtos/${p.itens[0].produtoId}#avaliacoes`} className="link">Avalie os produtos deste pedido ⭐</Link>
           </p>

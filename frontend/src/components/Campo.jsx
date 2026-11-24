@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { IconeOlho } from "./Icones";
+import { Eye, EyeSlash } from "@phosphor-icons/react";
 
 /**
  * Campo de formulário com rótulo, ícone opcional, ajuda e erro.
@@ -31,14 +31,16 @@ export default function Campo({ rotulo, erro, ajuda, icone: Icone, opcional, cla
           {...input}
         />
         {ehSenha && (
+          // tabIndex -1: o Tab pula o olho e vai direto para o próximo campo
           <button
             type="button"
+            tabIndex={-1}
             onClick={() => setMostrarSenha((v) => !v)}
             aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
             aria-pressed={mostrarSenha}
             className="grid cursor-pointer p-1"
           >
-            <IconeOlho className="size-5" />
+            {mostrarSenha ? <EyeSlash className="size-5" /> : <Eye className="size-5" />}
           </button>
         )}
       </div>

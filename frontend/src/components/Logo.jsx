@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Planeta } from "./Icones";
+import { Planet } from "@phosphor-icons/react";
 
 export default function Logo({ className = "" }) {
   return (
@@ -9,7 +9,7 @@ export default function Logo({ className = "" }) {
       className={`inline-flex items-center pt-1.5 font-logo text-[2.4rem] leading-none whitespace-nowrap text-white no-underline hover:text-white sm:text-[3.4rem] ${className}`}
     >
       Nebul
-      <Planeta className="-mx-[0.04em] size-[0.9em] -translate-y-[0.04em]" />
+      <Planet weight="bold" className="-mx-[0.04em] size-[0.9em] -translate-y-[0.04em]" />
       sa
     </Link>
   );

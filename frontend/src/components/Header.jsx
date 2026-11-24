@@ -5,7 +5,7 @@ import { useAuthStore } from "../stores/authStore";
 import { useCartStore } from "../stores/cartStore";
 import { toast } from "../stores/toastStore";
 import { primeiroNome } from "../utils/formatar";
-import { IconeCarrinho, IconeMenu, IconeSair, IconeUsuario } from "./Icones";
+import { List, ShoppingCartSimple, SignOut, User } from "@phosphor-icons/react";
 import Logo from "./Logo";
 
 const LINKS = [
@@ -32,8 +32,10 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-noite text-white shadow-[0_2px_12px_rgb(0_0_0/.18)]">
-      <div className="container-site flex h-[84px] items-center justify-between gap-6">
-        <Logo />
+      {/* desktop: grid 1fr | auto | 1fr — as laterais têm sempre a mesma largura,
+          então o menu fica no centro exato, não importa a largura do logo ou dos botões */}
+      <div className="container-site flex h-[84px] items-center justify-between gap-6 lg:grid lg:grid-cols-[1fr_auto_1fr]">
+        <Logo className="lg:justify-self-start" />
 
         <nav
           id="nav-principal"
@@ -60,22 +62,22 @@ export default function Header() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-0.5 sm:gap-2.5">
+        <div className="flex items-center gap-0.5 sm:gap-2.5 lg:justify-self-end">
           {usuario ? (
             <>
               <span className="mr-1 hidden text-sm whitespace-nowrap text-lilas lg:inline">Olá, {primeiroNome(usuario.nome)}</span>
               <NavLink to="/perfil" className={iconeBtn} aria-label="Meu perfil">
-                <IconeUsuario className="size-7" />
+                <User className="size-7" />
               </NavLink>
             </>
           ) : (
             <Link to="/login" className={iconeBtn} aria-label="Entrar ou criar conta">
-              <IconeUsuario className="size-7" />
+              <User className="size-7" />
             </Link>
           )}
 
           <button type="button" onClick={abrirCarrinho} className={iconeBtn} aria-label={`Abrir carrinho (${quantidade} ${quantidade === 1 ? "item" : "itens"})`}>
-            <IconeCarrinho className="size-7" />
+            <ShoppingCartSimple className="size-7" />
             {quantidade > 0 && (
               <span className="absolute top-0.5 right-0 grid h-5 min-w-5 place-items-center rounded-full bg-amarelo px-1.5 text-[.72rem] font-bold text-roxo-escuro">
                 {quantidade > 99 ? "99+" : quantidade}
@@ -89,7 +91,7 @@ export default function Header() {
               onClick={handleSair}
               className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border-[1.5px] border-amarelo px-2.5 py-1.5 text-sm font-semibold text-amarelo hover:bg-amarelo hover:text-roxo-escuro sm:px-4"
             >
-              <IconeSair className="size-4" />
+              <SignOut className="size-4" />
               <span className="hidden sm:inline">Sair</span>
             </button>
           )}
@@ -102,7 +104,7 @@ export default function Header() {
             aria-controls="nav-principal"
             onClick={() => setMenuAberto((v) => !v)}
           >
-            <IconeMenu className="size-7" />
+            <List className="size-7" />
           </button>
         </div>
       </div>

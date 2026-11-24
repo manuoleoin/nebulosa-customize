@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { useCarrinho } from "../hooks/useCarrinho";
 import { brl } from "../utils/formatar";
-import { IconeCarrinho, IconeEstrela } from "./Icones";
+import { ShoppingCartSimple, Star } from "@phosphor-icons/react";
 
 export default function CardProduto({ produto: p, escuro = false }) {
   const { adicionarComAviso } = useCarrinho();
@@ -30,7 +30,7 @@ export default function CardProduto({ produto: p, escuro = false }) {
         </Link>
         {p.notaMedia != null && (
           <span className="mb-1 flex items-center gap-1 text-xs text-texto-suave">
-            <IconeEstrela className="size-3.5 text-roxo" /> {p.notaMedia.toFixed(1)}
+            <Star weight="fill" className="size-3.5 text-roxo" /> {p.notaMedia.toFixed(1)}
           </span>
         )}
         <div className="flex items-end justify-between gap-2">
@@ -50,7 +50,7 @@ export default function CardProduto({ produto: p, escuro = false }) {
             aria-label={`Adicionar ${p.nome} ao carrinho`}
             className="relative z-10 grid size-[50px] shrink-0 cursor-pointer place-items-center rounded-full bg-amarelo-2 text-roxo-escuro transition hover:scale-105 hover:bg-amarelo-escuro"
           >
-            <IconeCarrinho className="size-7" />
+            <ShoppingCartSimple className="size-7" />
           </button>
         </div>
       </div>

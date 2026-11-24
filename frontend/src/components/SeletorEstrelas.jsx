@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IconeEstrela } from "./Icones";
+import { Star } from "@phosphor-icons/react";
 
 /** Input de nota (1 a 5) acessível: grupo de radios estilizados como estrelas */
 export default function SeletorEstrelas({ valor, onChange, nome = "nota" }) {
@@ -20,7 +20,8 @@ export default function SeletorEstrelas({ valor, onChange, nome = "nota" }) {
             className="peer sr-only"
             required
           />
-          <IconeEstrela
+          <Star
+            weight="fill"
             className={`size-10 transition peer-focus-visible:rounded peer-focus-visible:outline-3 peer-focus-visible:outline-roxo ${
               n <= ativo ? "text-amarelo-escuro" : "text-[#D5CCE6]"
             }`}

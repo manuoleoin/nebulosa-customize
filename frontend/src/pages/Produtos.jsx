@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { Alerta, Carregando, EstadoVazio } from "../components/Feedback";
 import GradeProdutos from "../components/GradeProdutos";
-import { IconeBusca } from "../components/Icones";
+import { MagnifyingGlass } from "@phosphor-icons/react";
 import { useApi } from "../hooks/useApi";
 import { useDebounce } from "../hooks/useDebounce";
 import { useTitulo } from "../hooks/useTitulo";
@@ -60,7 +60,7 @@ export default function Produtos() {
       <div className="container-site">
         <h1 className="sr-only">Nossos produtos</h1>
         <div role="search" className="mx-auto mt-6.5 mb-4.5 flex w-[min(410px,100%)] items-center gap-2.5 rounded-[10px] border-[1.5px] border-amarelo-2 bg-white px-3 py-1.5 focus-within:ring-3 focus-within:ring-amarelo/45">
-          <IconeBusca className="size-5.5 shrink-0 text-amarelo-escuro" />
+          <MagnifyingGlass className="size-5.5 shrink-0 text-amarelo-escuro" />
           <label htmlFor="busca" className="sr-only">Pesquisar produtos</label>
           <input
             id="busca"
@@ -111,7 +111,7 @@ export default function Produtos() {
         {carregando && !produtos && <Carregando />}
         <Alerta tipo="erro">{erro?.message}</Alerta>
         {produtos?.length === 0 && (
-          <EstadoVazio icone={IconeBusca} titulo="Nenhum produto encontrado.">
+          <EstadoVazio icone={MagnifyingGlass} titulo="Nenhum produto encontrado.">
             Tente outro termo ou categoria.
           </EstadoVazio>
         )}

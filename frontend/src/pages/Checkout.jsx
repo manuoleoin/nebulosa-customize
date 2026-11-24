@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import Campo from "../components/Campo";
 import { Alerta, EstadoVazio } from "../components/Feedback";
-import { IconeBoleto, IconeCarrinho, IconeCartao, IconeCheck, IconePix } from "../components/Icones";
+import { Barcode, Check, CreditCard, PixLogo, ShoppingCartSimple } from "@phosphor-icons/react";
 import { useCarrinho } from "../hooks/useCarrinho";
 import { useFormulario } from "../hooks/useFormulario";
 import { useTitulo } from "../hooks/useTitulo";
@@ -13,9 +13,9 @@ import { brl, mascaraCep, primeiroNome } from "../utils/formatar";
 import { UFS } from "../utils/regras";
 
 const PAGAMENTOS = [
-  { valor: "Pix", Icone: IconePix, detalhe: "Aprovação imediata" },
-  { valor: "Cartão de crédito", Icone: IconeCartao, detalhe: "Até 3x sem juros" },
-  { valor: "Boleto", Icone: IconeBoleto, detalhe: "Compensa em até 3 dias" },
+  { valor: "Pix", Icone: PixLogo, detalhe: "Aprovação imediata" },
+  { valor: "Cartão de crédito", Icone: CreditCard, detalhe: "Até 3x sem juros" },
+  { valor: "Boleto", Icone: Barcode, detalhe: "Compensa em até 3 dias" },
 ];
 
 function Passos({ atual }) {
@@ -75,7 +75,7 @@ export default function Checkout() {
     return (
       <div className="container-site">
         <Passos atual={0} />
-        <EstadoVazio icone={IconeCarrinho} titulo="Seu carrinho está vazio">
+        <EstadoVazio icone={ShoppingCartSimple} titulo="Seu carrinho está vazio">
           <p>Adicione produtos para finalizar um pedido.</p>
           <Link to="/produtos" className="btn btn-primario mt-4">Ver produtos</Link>
         </EstadoVazio>
@@ -123,7 +123,7 @@ export default function Checkout() {
                   className="flex cursor-pointer flex-col items-center gap-1.5 rounded-[14px] border-2 border-borda bg-white px-2.5 py-4 text-center font-semibold transition has-checked:border-roxo has-checked:bg-lilas-2 has-checked:ring-3 has-checked:ring-roxo/15 has-focus-visible:outline-3 has-focus-visible:outline-amarelo"
                 >
                   <input type="radio" name="metodoPagamento" value={valor} checked={valores.metodoPagamento === valor} onChange={alterar()} className="sr-only" />
-                  <Icone className="h-[34px] w-auto" />
+                  <Icone weight="duotone" className="size-[34px] text-roxo-escuro" />
                   {valor}
                   <small className="font-normal text-texto-suave">{detalhe}</small>
                 </label>
@@ -191,7 +191,7 @@ function Confirmacao({ pedido, nome }) {
       <Passos atual={2} />
       <section className="painel mx-auto mt-7 mb-14 max-w-[640px] px-5 py-14 text-center">
         <div className="mx-auto mb-4 grid size-24 place-items-center rounded-full bg-lilas text-roxo">
-          <IconeCheck className="size-14" />
+          <Check weight="bold" className="size-14" />
         </div>
         <h1 className="text-[2.4rem]">Pedido #{pedido.id} recebido!</h1>
         <p className="mt-2">

@@ -17,7 +17,7 @@ export async function categorias(req, res) {
 // GET /api/produtos/:id
 export async function detalhar(req, res) {
   const { id } = idParamSchema.parse(req.params);
-  res.json(await produtoService.buscarProduto(id));
+  res.json(await produtoService.buscarProduto(id, req.usuario?.id));
 }
 
 /** Se a validação/gravação falhar depois do upload, apaga o arquivo enviado */

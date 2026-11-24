@@ -1,11 +1,11 @@
 import { Link } from "react-router";
-import { Brilho, IconeEstrela, IconeFolha, IconePessoa } from "../components/Icones";
+import { Leaf, Sparkle, Star, User } from "@phosphor-icons/react";
 import { useTitulo } from "../hooks/useTitulo";
 
 const VALORES = [
-  [IconeEstrela, "Criatividade em cada detalhe", "Todas as estampas são autorais, criadas pela nossa equipe de ilustração. Cada coleção conta uma história.", "border-roxo"],
-  [IconeFolha, "Respeito ao planeta", "Algodão certificado, tintas à base d'água, produção sob demanda e embalagens recicláveis.", "border-amarelo-2"],
-  [IconePessoa, "Feito para você", "Nome, frase, cor favorita: a personalização é o coração da Nebulosa, do primeiro clique até a entrega.", "border-roxo-escuro"],
+  [Star, "Criatividade em cada detalhe", "Todas as estampas são autorais, criadas pela nossa equipe de ilustração. Cada coleção conta uma história.", "border-roxo"],
+  [Leaf, "Respeito ao planeta", "Algodão certificado, tintas à base d'água, produção sob demanda e embalagens recicláveis.", "border-amarelo-2"],
+  [User, "Feito para você", "Nome, frase, cor favorita: a personalização é o coração da Nebulosa, do primeiro clique até a entrega.", "border-roxo-escuro"],
 ];
 const PROCESSO = [
   ["Você escolhe", "Navega pela loja, escolhe o produto e finaliza o pedido."],
@@ -33,7 +33,7 @@ export default function Sobre() {
             <path d="M-170 0a170 42 0 0 0 340 0" fill="none" stroke="#FFD86B" strokeWidth="8" />
           </g>
         </svg>
-        <Brilho className="absolute top-[18%] left-[58%] size-12 text-amarelo" />
+        <Sparkle weight="fill" className="absolute top-[18%] left-[58%] size-12 text-amarelo" />
         <div className="container-site relative">
           <p className="rotulo text-amarelo!">Sobre nós</p>
           <h1 className="mt-3 max-w-[760px] text-[clamp(2.6rem,6vw,4.6rem)] text-white">

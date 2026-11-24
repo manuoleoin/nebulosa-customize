@@ -6,7 +6,7 @@ import { useCartStore } from "../stores/cartStore";
 import { brl } from "../utils/formatar";
 import { FRETE_GRATIS_A_PARTIR } from "../utils/regras";
 import CampoQuantidade from "./CampoQuantidade";
-import { IconeCadeado, IconeCarrinho, IconeFechar, IconeSetaDireita } from "./Icones";
+import { ArrowRight, Lock, ShoppingCartSimple, X } from "@phosphor-icons/react";
 
 /** Carrinho lateral (abre pela direita) */
 export default function CarrinhoDrawer() {
@@ -74,24 +74,24 @@ export default function CarrinhoDrawer() {
       >
         <div className="flex items-center justify-between bg-noite px-5 py-4.5 text-white">
           <h2 id="titulo-carrinho" className="m-0 flex items-center gap-2.5 text-[1.7rem] text-white">
-            <IconeCarrinho className="size-6.5 text-amarelo" /> Seu carrinho
+            <ShoppingCartSimple className="size-6.5 text-amarelo" /> Seu carrinho
           </h2>
           <button ref={btnFechar} type="button" onClick={fechar} aria-label="Fechar carrinho" className="grid size-11 cursor-pointer place-items-center rounded-full hover:bg-white/10 hover:text-amarelo">
-            <IconeFechar className="size-6" />
+            <X className="size-6" />
           </button>
         </div>
 
         {itens.length === 0 ? (
           <div className="grid flex-1 place-items-center p-8 text-center text-texto-suave">
             <div>
-              <IconeCarrinho className="mx-auto mb-2.5 size-24 text-lilas" />
+              <ShoppingCartSimple className="mx-auto mb-2.5 size-24 text-lilas" />
               <p>
                 <strong>Seu carrinho está vazio.</strong>
                 <br />
                 Que tal explorar nossa galáxia de produtos?
               </p>
               <Link to="/produtos" onClick={fechar} className="btn btn-primario mt-4">
-                Ver produtos <IconeSetaDireita />
+                Ver produtos <ArrowRight />
               </Link>
             </div>
           </div>
@@ -141,13 +141,13 @@ export default function CarrinhoDrawer() {
                 <div className="mt-1 flex justify-between border-t border-dashed border-borda pt-2 text-xl font-bold"><dt>Total</dt><dd>{brl(totais.total)}</dd></div>
               </dl>
               <button type="button" onClick={finalizar} className="btn btn-primario w-full">
-                Finalizar pedido <IconeSetaDireita />
+                Finalizar pedido <ArrowRight />
               </button>
               <button type="button" onClick={fechar} className="btn btn-contorno mt-2 w-full">
                 Continuar comprando
               </button>
               <p className="mt-2.5 flex items-center justify-center gap-1.5 text-xs text-texto-suave">
-                <IconeCadeado className="size-3.5" /> Compra 100% segura · até 3x sem juros
+                <Lock className="size-3.5" /> Compra 100% segura · até 3x sem juros
               </p>
             </div>
           </>

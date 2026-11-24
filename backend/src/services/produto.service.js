@@ -1,7 +1,7 @@
 import createError from "http-errors";
 import { prisma } from "../lib/prisma.js";
 import { removerUpload } from "../middlewares/upload.js";
-import { num } from "../utils/regras.js";
+import { num, STATUS_PERMITE_AVALIAR } from "../utils/regras.js";
 
 /** Decimal -> number e caminho da foto -> URL pública */
 function formatarProduto(p, notas) {
@@ -72,7 +72,8 @@ export async function listarCategorias() {
   return grupos.map((g) => g.categoria);
 }
 
-export async function buscarProduto(id) {
+/** usuarioId (opcional): quando logado, informa se ele pode avaliar o produto */
+export async function buscarProduto(id, usuarioId) {
   const produto = await prisma.produto.findUnique({
     where: { id },
     include: {
@@ -88,6 +89,7 @@ export async function buscarProduto(id) {
   const notas = await resumoNotas([id]);
   return {
     ...formatarProduto(resto, notas),
+    podeAvaliar: usuarioId ? await podeAvaliar(usuarioId, id) : false,
     avaliacoes: avaliacoes.map((a) => ({
       usuarioId: a.usuarioId,
       nome: a.usuario.nome,
@@ -125,10 +127,21 @@ export async function removerProduto(id) {
   removerUpload(produto.fotoCapa);
 }
 
+/** O usuário só pode avaliar produtos que vieram em algum pedido dele já entregue */
+export async function podeAvaliar(usuarioId, produtoId) {
+  const comprados = await prisma.itemPedido.count({
+    where: { produtoId, pedido: { usuarioId, status: { in: STATUS_PERMITE_AVALIAR } } },
+  });
+  return comprados > 0;
+}
+
 /** Uma avaliação por usuário/produto (PK composta): enviar de novo atualiza a nota */
 export async function avaliarProduto(usuarioId, produtoId, nota) {
   const existe = await prisma.produto.count({ where: { id: produtoId } });
   if (!existe) throw createError(404, "Produto não encontrado.");
+  if (!(await podeAvaliar(usuarioId, produtoId))) {
+    throw createError(403, "Só é possível avaliar produtos que você já comprou e recebeu.");
+  }
 
   const avaliacao = await prisma.avaliacao.upsert({
     where: { usuarioId_produtoId: { usuarioId, produtoId } },

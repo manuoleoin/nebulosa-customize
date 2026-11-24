@@ -1,5 +1,5 @@
 import { useToastStore } from "../stores/toastStore";
-import { IconeCheck } from "./Icones";
+import { Check } from "@phosphor-icons/react";
 
 export default function Toasts() {
   const toasts = useToastStore((s) => s.toasts);
@@ -9,7 +9,7 @@ export default function Toasts() {
     <div role="status" aria-live="polite" className="pointer-events-none fixed bottom-6 left-1/2 z-[200] grid -translate-x-1/2 gap-2">
       {toasts.map((t) => (
         <div key={t.id} className="pointer-events-auto flex animate-entrar items-center gap-2.5 rounded-full bg-roxo-escuro px-5 py-3 font-medium text-white shadow-forte">
-          <IconeCheck className="size-5 shrink-0 text-amarelo" />
+          <Check weight="bold" className="size-5 shrink-0 text-amarelo" />
           <span>{t.mensagem}</span>
           {t.acao && (
             <button

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router";
 import Campo from "../components/Campo";
 import { Alerta } from "../components/Feedback";
-import { IconeCadeado, IconeEmail, IconePessoa, IconeTelefone } from "../components/Icones";
+import { Envelope, Lock, Phone, User } from "@phosphor-icons/react";
 import { useFormulario } from "../hooks/useFormulario";
 import { useTitulo } from "../hooks/useTitulo";
 import AuthLayout from "../layouts/AuthLayout";
@@ -53,11 +53,11 @@ export default function Cadastro() {
         <p className="mb-5.5 text-texto-suave">Leva menos de um minuto 🚀</p>
         {erroGeral && !Object.keys(erros).length && <Alerta tipo="erro">{erroGeral}</Alerta>}
 
-        <Campo rotulo="Nome completo" name="nome" autoComplete="name" maxLength={100} placeholder="Como está no seu documento" icone={IconePessoa} value={valores.nome} onChange={alterar()} erro={erros.nome} />
-        <Campo rotulo="E-mail" name="email" type="email" autoComplete="email" maxLength={255} placeholder="seuemail@exemplo.com" icone={IconeEmail} value={valores.email} onChange={alterar()} erro={erros.email} />
-        <Campo rotulo="Telefone / WhatsApp" name="telefone" type="tel" inputMode="numeric" autoComplete="tel" placeholder="(11) 98765-4321" icone={IconeTelefone} value={valores.telefone} onChange={alterar(mascaraTelefone)} erro={erros.telefone} />
-        <Campo rotulo="Senha" name="senha" type="password" autoComplete="new-password" icone={IconeCadeado} ajuda="Mínimo de 8 caracteres, com letras e números." value={valores.senha} onChange={alterar()} erro={erros.senha} />
-        <Campo rotulo="Confirmar senha" name="confirmacaoSenha" type="password" autoComplete="new-password" icone={IconeCadeado} value={valores.confirmacaoSenha} onChange={alterar()} erro={erros.confirmacaoSenha} />
+        <Campo rotulo="Nome completo" name="nome" autoComplete="name" maxLength={100} placeholder="Como está no seu documento" icone={User} value={valores.nome} onChange={alterar()} erro={erros.nome} />
+        <Campo rotulo="E-mail" name="email" type="email" autoComplete="email" maxLength={255} placeholder="seuemail@exemplo.com" icone={Envelope} value={valores.email} onChange={alterar()} erro={erros.email} />
+        <Campo rotulo="Telefone / WhatsApp" name="telefone" type="tel" inputMode="numeric" autoComplete="tel" placeholder="(11) 98765-4321" icone={Phone} value={valores.telefone} onChange={alterar(mascaraTelefone)} erro={erros.telefone} />
+        <Campo rotulo="Senha" name="senha" type="password" autoComplete="new-password" icone={Lock} ajuda="Mínimo de 8 caracteres, com letras e números." value={valores.senha} onChange={alterar()} erro={erros.senha} />
+        <Campo rotulo="Confirmar senha" name="confirmacaoSenha" type="password" autoComplete="new-password" icone={Lock} value={valores.confirmacaoSenha} onChange={alterar()} erro={erros.confirmacaoSenha} />
 
         <label className="mb-4.5 flex items-start gap-2.5 text-sm">
           <input
