@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <title>Imagem fictícia de Lavinia — substitua este arquivo pela foto real</title>
+  <rect width="300" height="300" fill="#E7D8FF"/>
+  <g fill="#C9B4EC">
+    <circle cx="46" cy="42" r="3"/>
+    <circle cx="250" cy="70" r="2"/>
+    <circle cx="212" cy="30" r="3"/>
+    <circle cx="270" cy="232" r="2"/>
+    <circle cx="34" cy="250" r="3"/>
+  </g>
+  <circle cx="150" cy="116" r="52" fill="#7B5DC9"/>
+  <path d="M58 300c6-62 44-96 92-96s86 34 92 96z" fill="#7B5DC9"/>
+  <path transform="translate(238 122) scale(1.8)" fill="#FFD86B" d="M0-10 2.2-2.2 10 0 2.2 2.2 0 10-2.2 2.2-10 0-2.2-2.2z"/>
+</svg>

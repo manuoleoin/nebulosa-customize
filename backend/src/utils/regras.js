@@ -21,7 +21,7 @@ export const STATUS_PEDIDO = [
 export const STATUS_PERMITE_AVALIAR = ["entregue", "devolução solicitada", "devolvido"];
 
 /** produto.categoria */
-export const CATEGORIAS_PRODUTO = ["Acessórios", "Garrafas e copos", "Papelaria", "Vestuário"];
+export const CATEGORIAS_PRODUTO = ["Acessórios", "Casa", "Garrafas e copos", "Informática", "Papelaria", "Vestuário"];
 
 /** usuario.tipo */
 export const TIPO_USUARIO = { CLIENTE: "cliente", ADMIN: "admin" };

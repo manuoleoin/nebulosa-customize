@@ -10,31 +10,41 @@ import { PASTA_UPLOADS } from "../src/middlewares/upload.js";
 const SENHA_PADRAO = "nebulosa123"; // senha de todos os usuários de teste
 
 const produtos = [
-  { nome: "Garrafa Térmica Personalizada - 500ml", preco: 78.9, precoDesconto: 56.99, destaque: 4, categoria: "Garrafas e copos", cor: "Creme e roxo", tamanho: "500 ml", foto: "garrafa.svg",
+  { nome: "Garrafa Térmica Personalizada - 500ml", preco: 78.9, precoDesconto: 56.99, destaque: 4, categoria: "Garrafas e copos", cor: "Creme e roxo", tamanho: "500 ml", foto: "",
     descricao: "Praticidade e estilo para acompanhar sua rotina! Com design exclusivo, estrutura resistente e isolamento térmico, a garrafa ajuda a conservar a temperatura da sua bebida por mais tempo. Ideal para levar à escola, ao trabalho ou em passeios, unindo funcionalidade e personalidade em um só produto." },
+
   { nome: "Camiseta T-shirt Personalizada", preco: 80.99, precoDesconto: 64.9, destaque: 3, categoria: "Vestuário", cor: "Branca", tamanho: "M", foto: "camiseta.svg",
     descricao: "Camiseta 100% algodão penteado com estampa cósmica feita em silk ecológico. Corte confortável, toque macio e cores que não desbotam na lavagem." },
-  { nome: "Boné Personalizado", preco: 36.97, precoDesconto: 29.98, destaque: 2, categoria: "Acessórios", cor: "Creme e lilás", tamanho: "Único (ajustável)", foto: "bone.svg",
+
+  { nome: "Boné Personalizado", preco: 36.97, precoDesconto: 29.98, destaque: 2, categoria: "Acessórios", cor: "Creme e lilás", tamanho: "Único (ajustável)", foto: "",
     descricao: "Boné de sarja com aba curva lilás e bordado do planeta Nebulosa. Fecho regulável para caber em qualquer cabeça sonhadora." },
+
   { nome: "Agenda 2026-2029 Personalizada", preco: 119.96, precoDesconto: 99.9, destaque: 1, categoria: "Papelaria", cor: "Creme", tamanho: "A5", foto: "agenda.svg",
     descricao: "Agenda plurianual com capa dura, elástico, fitilho marcador e páginas pautadas. Personalize com seu nome na capa e organize seus próximos anos entre as estrelas." },
+
   { nome: "Caneca Cerâmica Constelação", preco: 49.9, precoDesconto: 39.9, categoria: "Garrafas e copos", cor: "Branca", tamanho: "325 ml", foto: "caneca.svg",
     descricao: "Caneca de cerâmica com impressão sublimática resistente à lava-louças e ao micro-ondas. Perfeita para o café das ideias." },
+
   { nome: "Moletom Galáxia Personalizado", preco: 219.9, precoDesconto: 179.9, destaque: 0, categoria: "Vestuário", cor: "Off-white", tamanho: "G", foto: "moletom.svg",
     descricao: "Moletom flanelado por dentro com estampa de planeta e constelações nas mangas. Quentinho, estiloso e feito para durar." },
+
   { nome: "Ecobag Lua Crescente", preco: 54.9, precoDesconto: 44.9, categoria: "Acessórios", cor: "Cru", tamanho: "40 x 38 cm", foto: "ecobag.svg",
     descricao: "Ecobag de algodão cru reforçado com estampa de lua crescente. Substitui sacolas plásticas com muito mais charme." },
+
   { nome: "Caderno Sonhe Crie Conquiste", preco: 42.9, precoDesconto: 34.9, categoria: "Papelaria", cor: "Lilás", tamanho: "A5", foto: "caderno.svg",
     descricao: "Caderno espiral com 96 folhas pontilhadas, papel 90 g/m² e capa lilás com a frase que guia a Nebulosa." },
+
   { nome: "Copo Long Drink Nebulosa", preco: 39.9, precoDesconto: 32.9, categoria: "Garrafas e copos", cor: "Transparente", tamanho: "350 ml", foto: "copo.svg",
     descricao: "Copo em acrílico livre de BPA com tampa e canudo. Estampa de planetas que brilha à luz do sol." },
+
   { nome: "Chaveiro Planeta", preco: 19.9, precoDesconto: 14.9, categoria: "Acessórios", cor: "Roxo e amarelo", tamanho: "5 cm", foto: "chaveiro.svg",
     descricao: "Chaveiro em acrílico espelhado com o planeta da marca. Pequeno no tamanho, gigante na personalidade." },
+
   { nome: "Squeeze Infantil Estrelinhas", preco: 49.9, precoDesconto: 49.9, categoria: "Garrafas e copos", cor: "Lilás", tamanho: "400 ml", foto: "squeeze.svg",
     descricao: "Squeeze leve e resistente com bico retrátil e estampa de estrelinhas. Personalize com o nome da criança." },
+
   { nome: "Kit Adesivos Cósmicos", preco: 24.9, precoDesconto: 19.9, categoria: "Papelaria", cor: "Variadas", tamanho: "12 unidades", foto: "adesivos.svg",
-    descricao: "Cartela com 12 adesivos em vinil à prova d'água: planetas, luas, estrelas e frases para decorar tudo o que é seu." },
-];
+    descricao: "Cartela com 12 adesivos em vinil à prova d'água: planetas, luas, estrelas e frases para decorar tudo o que é seu." }];
 
 const usuarios = [
   { nome: "Administração Nebulosa", email: "admin@nebulosa.com", telefone: "(11) 3333-4444", tipo: "admin" },

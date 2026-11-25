@@ -14,9 +14,8 @@ const PROCESSO = [
   ["Chega até você", "Embalado com carinho e enviado com frete compensado."],
 ];
 const EQUIPE = [
-  ["Helena Duarte", "Fundadora & ilustradora", "#7B5DC9"],
-  ["Theo Andrade", "Produção & estamparia", "#3A246B"],
-  ["Clara Mendes", "Atendimento & personalização", "#E8B53C"],
+  ["Lavinia Antunes", "Desenvolvedora de Layout e Interatividade", "/img/equipe/lavinia.jpg"],
+  ["Manuella Oleoin", "Desenvolvedora de sistemas e infraestrutura", "/img/equipe/manuella.jpg"],
 ];
 const NUMEROS = [["+8 mil", "pedidos entregues"], ["4.9★", "nota média dos clientes"], ["27", "estados atendidos"], ["100%", "embalagens recicláveis"]];
 
@@ -103,15 +102,11 @@ export default function Sobre() {
         <div className="container-site">
           <p className="rotulo text-center">Quem faz acontecer</p>
           <h2 id="titulo-equipe" className="mt-2 mb-9 text-center text-[clamp(2rem,4vw,3rem)]">Nossa equipe</h2>
-          <div className="grid gap-6 md:grid-cols-3">
-            {EQUIPE.map(([nome, papel, cor]) => (
+          <div className="mx-auto grid max-w-[620px] gap-6 md:grid-cols-2">
+            {EQUIPE.map(([nome, papel, imagem]) => (
               <article key={nome} className="text-center">
-                <div aria-hidden className="mx-auto mb-3.5 size-[150px] overflow-hidden rounded-full border-4 border-white bg-lilas shadow-card">
-                  <svg viewBox="0 0 150 150">
-                    <circle cx="75" cy="62" r="28" fill={cor} />
-                    <path d="M25 150c4-34 24-52 50-52s46 18 50 52z" fill={cor} />
-                    <path transform="translate(118 30)" fill="#FFD86B" d="M0-10 2.2-2.2 10 0 2.2 2.2 0 10-2.2 2.2-10 0-2.2-2.2z" />
-                  </svg>
+                <div className="mx-auto mb-3.5 size-[150px] overflow-hidden rounded-full border-4 border-white bg-lilas shadow-card">
+                  <img src={imagem} alt={`Foto de ${nome}`} className="size-full object-cover" />
                 </div>
                 <h3 className="text-[1.4rem]">{nome}</h3>
                 <p className="text-texto-suave">{papel}</p>

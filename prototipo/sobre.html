@@ -100,16 +100,13 @@
     document.addEventListener("DOMContentLoaded", () => {
       qsa("[data-icone]").forEach((el) => (el.outerHTML = ICONES[el.dataset.icone]));
       const equipe = [
-        { nome: "Helena Duarte", papel: "Fundadora & ilustradora", cor: "#7B5DC9" },
-        { nome: "Theo Andrade", papel: "Produção & estamparia", cor: "#3A246B" },
-        { nome: "Clara Mendes", papel: "Atendimento & personalização", cor: "#E8B53C" }
+        { nome: "Lavinia", papel: "Desenvolvedora visual e experiência de usuário", imagem: "img/equipe/lavinia.svg" },
+        { nome: "Manuella", papel: "Desenvolvedora de sistemas e infraestrutura", imagem: "img/equipe/manuella.svg" }
       ];
       qs("#equipe").innerHTML = equipe.map((m) => `
         <article class="membro">
-          <div class="foto" aria-hidden="true">
-            <svg viewBox="0 0 150 150"><rect width="150" height="150" fill="#E7D8FF"/>
-              <circle cx="75" cy="62" r="28" fill="${m.cor}"/><path d="M25 150c4-34 24-52 50-52s46 18 50 52z" fill="${m.cor}"/>
-              <path transform="translate(118 30)" fill="#FFD86B" d="M0-10 2.2-2.2 10 0 2.2 2.2 0 10-2.2 2.2-10 0-2.2-2.2z"/></svg>
+          <div class="foto">
+            <img src="${m.imagem}" alt="Foto de ${m.nome}">
           </div>
           <h3>${m.nome}</h3><p>${m.papel}</p>
         </article>`).join("");

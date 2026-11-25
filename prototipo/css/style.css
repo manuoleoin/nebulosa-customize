@@ -636,10 +636,10 @@ body.sem-scroll { overflow: hidden; }
 .processo li { position: relative; padding: 60px 18px 20px; background: rgba(255,255,255,.06); border: 1px solid rgba(231,216,255,.25); border-radius: 16px; color: var(--lilas); }
 .processo li::before { counter-increment: passo; content: counter(passo, decimal-leading-zero); position: absolute; top: 14px; left: 18px; font-family: var(--f-titulo); font-size: 2.2rem; color: var(--amarelo); font-weight: 700; }
 .processo h3 { color: #fff; font-size: 1.35rem; }
-.equipe { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.equipe { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 620px; margin: 0 auto; }
 .membro { text-align: center; }
 .membro .foto { width: 150px; height: 150px; border-radius: 50%; margin: 0 auto 14px; background: var(--lilas); display: grid; place-items: center; border: 4px solid #fff; box-shadow: var(--sombra-card); overflow: hidden; }
-.membro .foto svg { width: 100%; height: 100%; }
+.membro .foto img { width: 100%; height: 100%; object-fit: cover; }
 .membro h3 { font-size: 1.4rem; margin-bottom: 2px; }
 .membro p { margin: 0; color: var(--texto-suave); font-size: .95rem; }
 .numeros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center; }
