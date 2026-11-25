@@ -48,9 +48,9 @@ export default function Sobre() {
         <div className="container-site grid items-center gap-14 md:grid-cols-2">
           <div>
             <p className="rotulo">Nossa história</p>
-            <h2 className="my-3 text-[clamp(2rem,4vw,3rem)]">De um quarto cheio de ideias a um ateliê cheio de estrelas</h2>
+            <h2 className="my-3 text-[clamp(2rem,4vw,3rem)]">De uma sala cheio de ideias a um ateliê cheio de estrelas</h2>
             <p className="mb-4 text-[1.08rem]">
-              Tudo começou em 2022, quando nossa fundadora personalizou uma caneca para presentear uma amiga que adorava astronomia. Vieram os pedidos de amigos, depois dos amigos dos amigos… e o quarto virou ateliê.
+              Somos a Lavínia A. Silva e a Manuella Oleoin, desenvolvedoras responsáveis por este projeto, criado em 2026 como parte das disciplinas de Linguagem de Programação e Banco de Dados. O que começou como uma proposta de aula virou a Nebulosa: um espaço feito com carinho para quem gosta de coisas únicas e feitas sob medida.
             </p>
             <p className="mb-6 text-[1.08rem]">
               Hoje somos uma pequena equipe apaixonada por ilustração e produção consciente. Produzimos <strong>sob demanda</strong>, finalizamos cada peça à mão e enviamos para todo o Brasil.
@@ -58,7 +58,7 @@ export default function Sobre() {
             <Link to="/produtos" className="btn btn-primario">Conheça nossos produtos <span aria-hidden>→</span></Link>
           </div>
           <div className="overflow-hidden rounded-3xl shadow-card">
-            <img src="/img/atelie.svg" alt="Ilustração do ateliê Nebulosa: bancada com caneca, camiseta e garrafa personalizadas sob um céu estrelado" />
+            <img src="/img/ateliê.png" alt="Ilustração do ateliê Nebulosa: bancada com caneca, camiseta e garrafa personalizadas sob um céu estrelado" />
           </div>
         </div>
       </section>

@@ -81,7 +81,7 @@ O site só cria pedidos como `pendente`. Os outros status são alterados pelo Pr
 
 ### `produto.categoria`
 
-`Acessórios` · `Casa` · `Garrafas e copos` · `Informática` · `Papelaria` · `Vestuário`
+`Roupas e acessórios` · `Papelaria e organização` · `Casa e decoração` · `Acessórios personalizados` · `Informática`
 
 A API de produtos (admin) recusa outras categorias. Para criar uma nova, inclua o nome em `CATEGORIAS_PRODUTO`.
 

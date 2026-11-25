@@ -49,7 +49,10 @@ export default function Produtos() {
 
   const semFiltro = !busca && !categoria;
   const corte = semFiltro ? 8 : Infinity;
-  const destaques = produtos?.filter((p) => p.emDestaque).slice(0, 4) ?? [];
+  // os destaques vão para a faixa escura: saem da grade para o produto não aparecer duas vezes
+  const destaques = semFiltro ? (produtos?.filter((p) => p.emDestaque).slice(0, 4) ?? []) : [];
+  const idsDestaque = new Set(destaques.map((p) => p.id));
+  const grade = produtos?.filter((p) => !idsDestaque.has(p.id)) ?? [];
   const chip = (ativo) =>
     `cursor-pointer rounded-full border-[1.5px] px-4 py-1.5 text-sm font-medium ${
       ativo ? "border-roxo bg-roxo text-white" : "border-borda bg-lilas-2 text-roxo-escuro hover:border-roxo"
@@ -115,7 +118,7 @@ export default function Produtos() {
             Tente outro termo ou categoria.
           </EstadoVazio>
         )}
-        {produtos && <GradeProdutos produtos={produtos.slice(0, corte)} />}
+        {produtos && <GradeProdutos produtos={grade.slice(0, corte)} />}
       </section>
 
       {/* faixa escura de destaques (como no layout), só sem filtros */}
@@ -128,9 +131,9 @@ export default function Produtos() {
         </section>
       )}
 
-      {produtos && produtos.length > corte && (
+      {grade.length > corte && (
         <section className="container-site pt-10 pb-14">
-          <GradeProdutos produtos={produtos.slice(corte)} />
+          <GradeProdutos produtos={grade.slice(corte)} />
         </section>
       )}
     </>

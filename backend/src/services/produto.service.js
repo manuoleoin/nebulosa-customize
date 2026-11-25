@@ -1,7 +1,7 @@
 import createError from "http-errors";
 import { prisma } from "../lib/prisma.js";
 import { removerUpload } from "../middlewares/upload.js";
-import { num, STATUS_PERMITE_AVALIAR } from "../utils/regras.js";
+import { CATEGORIAS_PRODUTO, num, STATUS_PERMITE_AVALIAR } from "../utils/regras.js";
 
 /** Decimal -> number e caminho da foto -> URL pública */
 function formatarProduto(p, notas) {
@@ -63,13 +63,14 @@ export async function listarProdutos({ busca, categoria, ordem, destaque, limite
   return lista;
 }
 
+/** Filtros da vitrine: as categorias na ordem oficial, só as que têm produto */
 export async function listarCategorias() {
   const grupos = await prisma.produto.groupBy({
     by: ["categoria"],
     where: { categoria: { not: null } },
-    orderBy: { categoria: "asc" },
   });
-  return grupos.map((g) => g.categoria);
+  const existentes = new Set(grupos.map((g) => g.categoria));
+  return CATEGORIAS_PRODUTO.filter((c) => existentes.has(c));
 }
 
 /** usuarioId (opcional): quando logado, informa se ele pode avaliar o produto */

@@ -65,7 +65,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="relative h-full min-h-80">
-              <img src="/img/hero.svg" alt="Moletom off-white com estampa de planeta nas mangas e caneca com constelações" className="absolute inset-0 size-full object-cover" />
+              <img src="/img/hero-moletom.webp" alt="Pessoa vestindo moletom off-white com estampa de planeta e estrelas nas mangas" className="absolute inset-0 size-full object-cover" />
             </div>
           </div>
         </div>
